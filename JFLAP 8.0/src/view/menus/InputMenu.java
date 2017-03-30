@@ -35,7 +35,7 @@ public class InputMenu extends JMenu implements TabChangeListener {
 	public InputMenu(JFLAPEnvironment e) {
 		super("Input");
 		e.addTabListener(this);
-		this.update(e.getCurrentView());
+		this.update(e.getPrimaryView());
 	}
 
 	@Override

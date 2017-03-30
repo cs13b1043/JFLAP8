@@ -2,10 +2,13 @@ package view.regex;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.net.URL;
 import java.util.Arrays;
 
 import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -53,7 +56,7 @@ public class FAToREPanel extends AutomatonDisplayPanel<FiniteStateAcceptor, FSAT
 		scroll.revalidate();
 		JPanel center = new JPanel(new BorderLayout());
 		
-		center.add(tools, BorderLayout.NORTH);
+		center.add(tools, BorderLayout.EAST);
 		center.add(scroll, BorderLayout.CENTER);
 		add(center, BorderLayout.CENTER);
 		
@@ -79,7 +82,18 @@ public class FAToREPanel extends AutomatonDisplayPanel<FiniteStateAcceptor, FSAT
 		panel.setTool(arrow);
 		
 		tools.addSeparator();
-		tools.add(new AbstractAction("Step") {
+		
+		ImageIcon prev_icon = new ImageIcon( Toolkit.getDefaultToolkit().getImage(getClass().getResource("/ICON/prev.png")));
+		tools.add(new AbstractAction("Step", prev_icon) {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO myController.step();
+			}
+		});
+		
+		ImageIcon next_icon = new ImageIcon( Toolkit.getDefaultToolkit().getImage(getClass().getResource("/ICON/next.png")));
+		tools.add(new AbstractAction("Step", next_icon) {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -87,7 +101,8 @@ public class FAToREPanel extends AutomatonDisplayPanel<FiniteStateAcceptor, FSAT
 			}
 		});
 		
-		tools.add(new AbstractAction("Step to Completion") {
+		ImageIcon final_icon = new ImageIcon( Toolkit.getDefaultToolkit().getImage(getClass().getResource("/ICON/tick.png")));
+		tools.add(new AbstractAction("Step to Completion", final_icon) {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {

@@ -33,7 +33,7 @@ public class ConvertMenu extends JMenu implements TabChangeListener {
 	public ConvertMenu(JFLAPEnvironment e) {
 		super("Convert");
 		e.addTabListener(this);
-		this.update(e.getCurrentView());
+		this.update(e.getPrimaryView());
 	}
 	@Override
 	public void tabChanged(TabChangedEvent e) {

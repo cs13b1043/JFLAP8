@@ -57,6 +57,7 @@ public class JFLAPEnvironment extends JFrame implements
 	private File myFile;
 	private JTabbedPane myTabbedPane;
 	private Component myPrimaryView;
+	private Component myPreviousOutput;
 	private boolean amDirty;
 	private int myID;
 	private List<TabChangeListener> myListeners;
@@ -79,16 +80,14 @@ public class JFLAPEnvironment extends JFrame implements
 
 		myID = id;
 		myTabbedPane = new SpecialTabbedPane();
-		//this.add(myTabbedPane);
-		myPrimaryView = component;
 		
 		this.setLayout(new GridLayout(0,2));
-		this.revalidate();
-		addSelectedComponent(component);
+		myPrimaryView = component;
+		this.add(component);
+		//this.add(myTabbedPane);
 		
 		JFLAPMenuBar menu = MenuFactory.createMenu(this);
 		this.setJMenuBar(menu);
-		
 		// I believe this is needed to make sure it doesn't close on
 		// a cancelled save.
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -252,7 +251,6 @@ public class JFLAPEnvironment extends JFrame implements
 
 	public void addView(Component component) {
 		myTabbedPane.add(component);
-		// myTabbedPane.setSelectedComponent(component);
 
 		if (component instanceof EditingPanel)
 			amDirty = true;
@@ -261,16 +259,15 @@ public class JFLAPEnvironment extends JFrame implements
 		update();
 	}
 
-	public void addSelectedComponentOld(Component component) {
-		addView(component);
-		myTabbedPane.setSelectedIndex(myTabbedPane.getTabCount() - 1);
-	}
-	
 	public void addSelectedComponent(Component component) {
-		//TODO 
+		if(myPreviousOutput!=null)
+			this.remove(myPreviousOutput);
 		this.add(component);
 		this.revalidate();
 		this.repaint();
+		myPreviousOutput = component;
+//		addView(component);
+//		myTabbedPane.setSelectedIndex(myTabbedPane.getTabCount() - 1);
 	}
 
 	private void distributeTabChangedEvent() {
@@ -311,9 +308,13 @@ public class JFLAPEnvironment extends JFrame implements
 		}
 		if (c instanceof EditingPanel)
 			amDirty = true;
+		
 		myTabbedPane.remove(i);
+		
 		distributeTabChangedEvent();
+		
 		myTabbedPane.revalidate();
+		
 		myTabbedPane.setSelectedIndex(myTabbedPane.getTabCount() - 1);
 		this.repaint();
 	}
@@ -324,7 +325,7 @@ public class JFLAPEnvironment extends JFrame implements
 	}
 
 	private void updatePrimaryPanel() {
-		boolean enabled = myTabbedPane.getTabCount() == 1;
+		boolean enabled = myTabbedPane.getTabCount() == 0;
 		if (myPrimaryView instanceof EditingPanel)
 			((EditingPanel) myPrimaryView).setEditable(enabled);
 		myTabbedPane.setEnabledAt(0, enabled);
@@ -353,12 +354,14 @@ public class JFLAPEnvironment extends JFrame implements
 		@Override
 		public void setSelectedIndex(int index) {
 			super.setSelectedIndex(index);
+			if(index>=0){
 			Dimension newSize = this.getComponentAt(index).getPreferredSize();
 
 			JFLAPEnvironment.this.setPreferredSize(newSize);
 			JFLAPEnvironment.this.setSize(newSize);
 			JFLAPEnvironment.this.update();
 			distributeTabChangedEvent();
+			}
 		}
 	}
 
@@ -380,8 +383,7 @@ public class JFLAPEnvironment extends JFrame implements
 	}
 
 	public Component getCurrentView() {
-		//return myTabbedPane.getSelectedComponent();
-		return myPrimaryView;
+		return myTabbedPane.getSelectedComponent();
 	}
 
 	@Override

@@ -86,7 +86,7 @@ public class CloseTabAction extends AbstractAction implements TabChangeListener{
 	
 	@Override
 	public boolean isEnabled() {
-		return myEnvironment.getTabCount() > 1;
+		return myEnvironment.getTabCount() > 0;
 	}
 
 

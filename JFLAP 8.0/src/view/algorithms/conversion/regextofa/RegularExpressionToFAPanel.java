@@ -3,12 +3,14 @@ package view.algorithms.conversion.regextofa;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -60,7 +62,7 @@ public class RegularExpressionToFAPanel extends AutomatonDisplayPanel<FiniteStat
 		SizeSlider slider = new SizeSlider(getEditorPanel());
 		
 		JPanel panel = new JPanel(new BorderLayout());
-		panel.add(tools, BorderLayout.NORTH);
+		panel.add(tools, BorderLayout.EAST);
 		panel.add(scroll, BorderLayout.CENTER);
 		panel.add(slider, BorderLayout.SOUTH);
 		
@@ -80,7 +82,18 @@ public class RegularExpressionToFAPanel extends AutomatonDisplayPanel<FiniteStat
 		panel.setTool(arrow);
 		
 		tools.addSeparator();
-		tools.add(new AbstractAction("Step") {
+		
+		ImageIcon prev_icon = new ImageIcon( Toolkit.getDefaultToolkit().getImage(getClass().getResource("/ICON/prev.png")));
+		tools.add(new AbstractAction("Step", prev_icon) {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO
+			}
+		});
+		
+		ImageIcon next_icon = new ImageIcon( Toolkit.getDefaultToolkit().getImage(getClass().getResource("/ICON/next.png")));
+		tools.add(new AbstractAction("Step", next_icon) {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -90,7 +103,8 @@ public class RegularExpressionToFAPanel extends AutomatonDisplayPanel<FiniteStat
 			}
 		});
 		
-		tools.add(new AbstractAction("Step to Completion") {
+		ImageIcon final_icon = new ImageIcon( Toolkit.getDefaultToolkit().getImage(getClass().getResource("/ICON/tick.png")));
+		tools.add(new AbstractAction("Step to Completion", final_icon) {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {

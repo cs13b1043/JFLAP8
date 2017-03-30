@@ -38,7 +38,7 @@ public class EditMenu extends JMenu implements TabChangeListener {
 	public EditMenu(JFLAPEnvironment e) {
 		super("Edit");
 		e.addTabListener(this);
-		this.update(e.getCurrentView());
+		this.update(e.getPrimaryView());
 	}
 
 	public Action[] createActions(JFLAPEnvironment e) {

@@ -27,6 +27,7 @@ public class ToolBar extends JToolBar implements ActionListener {
 	public ToolBar(Tool... tools) {
 		myButtons = new ArrayList<ToolButton>();
 		myListeners = new ArrayList<ToolListener>();
+		this.setOrientation(VERTICAL);
 		this.addAll(tools);
 	}
 
