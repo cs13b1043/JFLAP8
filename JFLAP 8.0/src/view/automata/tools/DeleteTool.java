@@ -35,7 +35,7 @@ public class DeleteTool<T extends Automaton<S>, S extends Transition<S>>
 
 	@Override
 	public String getToolTip() {
-		return "Deleter";
+		return "Deleter - Keyboard Shortcut(D) - Click on a state or transition to delete it.";
 	}
 
 	@Override
