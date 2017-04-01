@@ -45,13 +45,13 @@ public class MainMenu extends JFrame {
 	 */
 	public MainMenu() {
 		// super((java.awt.Frame)null, "New Document");
-		super("JFLAP " + JFLAPConstants.VERSION);
+		super("NEW PROJECT");
 		getContentPane().setLayout(new GridLayout(0, 1));
-		initMenu();
+		initMenu();	
 		initComponents();
-		setResizable(false);
+		setResizable(true);
 		this.pack();
-		this.setLocation(50, 50);
+		this.setLocation(600, 300);
 		
 		addNavigationKeys();
 		
@@ -86,8 +86,8 @@ public class MainMenu extends JFrame {
 		// Mini menu!
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(this.createMenu("File", new OpenAction(), new ExitAction()));
-		menuBar.add(this.createMenu("Help", new MainMenuHelpAction(), new AboutAction(), new PreferenceAction()));
-		menuBar.add(this.createMenu("Batch", new BatchTestAction()));
+		menuBar.add(this.createMenu("Help", new MainMenuHelpAction(), new AboutAction()/*, new PreferenceAction()*/));
+		//menuBar.add(this.createMenu("Batch", new BatchTestAction()));
 		setJMenuBar(menuBar);
 	}
 

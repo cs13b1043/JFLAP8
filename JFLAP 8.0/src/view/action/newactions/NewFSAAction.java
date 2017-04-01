@@ -5,7 +5,7 @@ import model.automata.acceptors.fsa.FiniteStateAcceptor;
 public class NewFSAAction extends NewFormalDefinitionAction<FiniteStateAcceptor>{
 
 	public NewFSAAction() {
-		super("Finite Automaton");
+		super("Go to Automaton editor");
 		// TODO Auto-generated constructor stub
 	}
 
