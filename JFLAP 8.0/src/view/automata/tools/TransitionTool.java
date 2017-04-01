@@ -34,7 +34,7 @@ public class TransitionTool<T extends Automaton<S>, S extends Transition<S>>
 
 	@Override
 	public String getToolTip() {
-		return "Transition Creator- Keyboard Shortcut(T)- Drag from one state to another to create a transition and then give a label to the transition ";
+		return "Transition Creator- KeyboardShortcut(T)- Drag from one state to another to create a transition and then give a label to the transition ";
 	}
 
 	@Override
