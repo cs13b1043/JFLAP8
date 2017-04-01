@@ -3,6 +3,7 @@ package view.automata.views;
 import java.awt.Component;
 import java.awt.Dimension;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 
@@ -11,6 +12,8 @@ import model.automata.Automaton;
 import model.automata.Transition;
 import model.graph.TransitionGraph;
 import model.undo.UndoKeeper;
+import view.action.automata.DFAtoREAction;
+import view.action.automata.NFAtoDFAAction;
 import view.automata.editing.AutomatonEditorPanel;
 import view.automata.tools.ArrowTool;
 import view.automata.tools.DeleteTool;
@@ -73,6 +76,7 @@ public class AutomatonView<T extends Automaton<S>, S extends Transition<S>>
 		StateTool<T, S> state = createStateTool(panel, definition);
 		TransitionTool<T, S> trans = new TransitionTool<T, S>(panel);
 		DeleteTool<T, S> delete = new DeleteTool<T, S>(panel);
+	
 
 		panel.setTool(arrow);
 		ToolBar bar = new ToolBar(arrow, state, trans, delete);
@@ -83,6 +87,20 @@ public class AutomatonView<T extends Automaton<S>, S extends Transition<S>>
 		
 		bar.add(new UndoButton(undo, true));
 		bar.add(new RedoButton(redo, true));
+		
+		bar.addSeparator();
+		
+		JButton convertToRE = new JButton("ConvertToRE");
+		convertToRE.addActionListener(new DFAtoREAction((FSAView)this));
+		convertToRE.setToolTipText("Convert the DFA to RE");
+		bar.add(convertToRE);
+	     
+	    JButton convertToDFA = new JButton("ConvertToDFA");
+	    convertToDFA.addActionListener(new NFAtoDFAAction((FSAView)this));
+	    convertToDFA.setToolTipText("Convert the NFA to DFA");
+	    bar.add(convertToDFA);
+	 
+		
 		return bar;
 	}
 	

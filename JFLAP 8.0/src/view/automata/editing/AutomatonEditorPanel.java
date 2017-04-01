@@ -151,7 +151,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	public void setMagnification(double mag) {
 		// TODO: Resize automata & notes, may actually want separate slider for
 		// automaton. Issue with changing magnification and points.
-//		transform.setToScale(mag * 2, mag * 2);
+        //transform.setToScale(mag * 2, mag * 2);
 		super.setMagnification(mag);
 		// Resize node
 		myDrawer.getVertexDrawer().changeRadius(mag);
