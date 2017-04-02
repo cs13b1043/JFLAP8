@@ -7,7 +7,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
+import javax.swing.JToolBar;
 
 import util.view.magnify.Magnifiable;
 import util.view.magnify.SizeSlider;
@@ -52,7 +52,20 @@ public abstract class FormalDefinitionView<T, S extends FormalDefinition> extend
 		
 		if (editable)
 			this.add(createToolbar(getDefinition(), keeper), BorderLayout.EAST);
+			this.add(createConvertbar(getDefinition(), keeper), BorderLayout.SOUTH);
+			this.add(createRunbar(getDefinition(), keeper), BorderLayout.NORTH);
+		
 	}
+
+	public JToolBar createConvertbar(S definition, UndoKeeper keeper) {
+		
+		return new JToolBar();
+	}
+	
+	public JToolBar createRunbar(S definition, UndoKeeper keeper) {
+		return new JToolBar();
+	}
+
 
 	public Component createToolbar(S definition, UndoKeeper keeper) {
 		return new UndoPanel(keeper);
@@ -86,4 +99,7 @@ public abstract class FormalDefinitionView<T, S extends FormalDefinition> extend
 	
 	@Override
 	public abstract String getName();
+
+	
+	
 }

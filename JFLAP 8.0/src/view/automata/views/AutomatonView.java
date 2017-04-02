@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
 
 import file.xml.graph.AutomatonEditorData;
 import model.automata.Automaton;
@@ -13,6 +14,7 @@ import model.automata.Transition;
 import model.graph.TransitionGraph;
 import model.undo.UndoKeeper;
 import view.action.automata.DFAtoREAction;
+import view.action.automata.FastSimulateAction;
 import view.action.automata.NFAtoDFAAction;
 import view.automata.editing.AutomatonEditorPanel;
 import view.automata.tools.ArrowTool;
@@ -88,6 +90,7 @@ public class AutomatonView<T extends Automaton<S>, S extends Transition<S>>
 		bar.add(new UndoButton(undo, true));
 		bar.add(new RedoButton(redo, true));
 		
+		/*
 		bar.addSeparator();
 		
 		JButton convertToRE = new JButton("ConvertToRE");
@@ -99,11 +102,50 @@ public class AutomatonView<T extends Automaton<S>, S extends Transition<S>>
 	    convertToDFA.addActionListener(new NFAtoDFAAction((FSAView)this));
 	    convertToDFA.setToolTipText("Convert the NFA to DFA");
 	    bar.add(convertToDFA);
-	 
+	    */
 		
 		return bar;
 	}
+@Override
+	public JToolBar createConvertbar(T definition, UndoKeeper keeper) {
+		AutomatonEditorPanel<T, S> panel = (AutomatonEditorPanel<T, S>) getCentralPanel();
+		
+		JToolBar bar=new JToolBar();
+		
+		JButton convertToRE = new JButton("ConvertToRE");
+		convertToRE.addActionListener(new DFAtoREAction((FSAView)this));
+		convertToRE.setToolTipText("Convert the DFA to RE");
+		bar.add(convertToRE);
+	     
+	    JButton convertToDFA = new JButton("ConvertToDFA");
+	    convertToDFA.addActionListener(new NFAtoDFAAction((FSAView)this));
+	    convertToDFA.setToolTipText("Convert the NFA to DFA");
+	    bar.add(convertToDFA);
+	    bar.setAlignmentX(0);
+		
+		return bar;
+	}
+
+@Override
+public JToolBar createRunbar(T definition, UndoKeeper keeper) {
+	AutomatonEditorPanel<T, S> panel = (AutomatonEditorPanel<T, S>) getCentralPanel();
 	
+	JToolBar bar=new JToolBar();
+	
+	JButton fastRun = new JButton("FastRun");
+	fastRun.addActionListener((new FastSimulateAction((FSAView)this)));
+	fastRun.setToolTipText("Run an input on the automaton");
+	bar.add(fastRun);
+    /*
+    JButton convertToDFA = new JButton("ConvertToDFA");
+    convertToDFA.addActionListener(new NFAtoDFAAction((FSAView)this));
+    convertToDFA.setToolTipText("Convert the NFA to DFA");
+    bar.add(convertToDFA);
+    */
+
+	return bar;
+}
+
 	public ArrowTool<T, S> createArrowTool (AutomatonEditorPanel<T, S> panel, T def){
 		return new ArrowTool<T, S>(panel, def);
 	}
