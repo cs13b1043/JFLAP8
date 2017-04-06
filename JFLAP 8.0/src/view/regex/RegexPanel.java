@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -46,7 +47,7 @@ public class RegexPanel extends EditingPanel {
 		MagnifiablePanel regexPanel = new MagnifiablePanel(new BorderLayout());
 		regexPanel.add(
 				new MagnifiableLabel("Expression: ", JFLAPPreferences
-						.getDefaultTextSize()), BorderLayout.WEST);
+						.getDefaultTextSize()), BorderLayout.NORTH);
 		regexPanel.add(myField, BorderLayout.CENTER);
 
 		add(regexPanel, BorderLayout.CENTER);
