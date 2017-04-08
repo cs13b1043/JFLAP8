@@ -3,9 +3,11 @@ package view.algorithms.transform;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.util.Set;
 
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 
@@ -124,6 +126,18 @@ public class NFAtoDFAPanel extends
 			}
 		});
 
+		JButton changeLayout = new JButton("LayoutGraph");
+	    //changeLayout.addActionListener(new NFAtoDFAAction((FSAView)this));
+	    changeLayout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//AutomatonEditorPanel<T, S> panel = (AutomatonEditorPanel<T, S>) getCentralPanel();
+				myDFApanel.layoutGraph();
+			}
+		});
+	    changeLayout.setToolTipText("Change the layout of the graph");
+		tools.add(changeLayout);
+		
+		
 		return tools;
 	}
 
