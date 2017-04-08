@@ -156,6 +156,7 @@ public class RegularExpressionToFAPanel extends AutomatonDisplayPanel<FiniteStat
 			double y = added.size() > 1 ? ((double) i
 					/ ((double) added.size() - 1.0) - 0.5) * 0.5 : 0.0;
 			pe.y = ps.y = y;
+			System.out.println(pStart.getX()+" " + pStart.getY());
 			at.transform(ps, pStart);
 			at.transform(pe, pEnd);
 			// Clamp bounds.

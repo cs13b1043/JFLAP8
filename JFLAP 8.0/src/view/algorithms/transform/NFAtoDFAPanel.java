@@ -27,7 +27,6 @@ import view.automata.tools.ToolBar;
 import view.automata.tools.algorithm.NonTransitionArrowTool;
 import view.automata.tools.algorithm.StateExpanderTool;
 import view.automata.tools.algorithm.TransitionExpanderTool;
-import view.automata.views.FSAView;
 
 public class NFAtoDFAPanel extends
 		AutomatonDisplayPanel<FiniteStateAcceptor, FSATransition> {
@@ -45,31 +44,31 @@ public class NFAtoDFAPanel extends
 	}
 
 	private void initView() {
-		AutomatonEditorPanel<FiniteStateAcceptor, FSATransition> nfa = getEditorPanel();
+		//AutomatonEditorPanel<FiniteStateAcceptor, FSATransition> nfa = getEditorPanel();
 		myDFApanel = new AutomatonEditorPanel<FiniteStateAcceptor, FSATransition>(
 				myAlg.getDFA(), new UndoKeeper(), true);
 		myDFApanel.getActionMap().put(AutomatonEditorPanel.DELETE, null);
 		myDFApanel.updateBounds(getGraphics());
 
-		MagnifiableScrollPane nScroll = new MagnifiableScrollPane(nfa), dScroll = new MagnifiableScrollPane(
-				myDFApanel);
-		Dimension nSize = nfa.getMinimumSize();
-		int padding = (int) (nfa.getStateBounds() - nfa.getStateRadius());
-		nScroll.setMinimumSize(new Dimension(nSize.width + padding,
-				nSize.height));
+		//MagnifiableScrollPane nScroll = new MagnifiableScrollPane(nfa);
+		MagnifiableScrollPane dScroll = new MagnifiableScrollPane(myDFApanel);
+		//Dimension nSize = nfa.getMinimumSize();
+		//int padding = (int) (nfa.getStateBounds() - nfa.getStateRadius());
+		//nScroll.setMinimumSize(new Dimension(nSize.width + padding,
+		//		nSize.height));
 		MagnifiablePanel right = new MagnifiablePanel(new BorderLayout());
 
 		ToolBar tools = createTools();
-		right.add(tools, BorderLayout.NORTH);
+		right.add(tools, BorderLayout.EAST);
 		right.add(dScroll, BorderLayout.CENTER);
 
 		Dimension rSize = right.getMinimumSize();
 		int width = (int) (rSize.width * 1.5);
 		right.setMinimumSize(new Dimension(width, rSize.height));
 
-		JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, nScroll,
-				right);
-		add(split, BorderLayout.CENTER);
+		//split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, nScroll,
+		//		right);
+		add(right, BorderLayout.CENTER);
 
 		Dimension size = getPreferredSize();
 		rSize = right.getMinimumSize();

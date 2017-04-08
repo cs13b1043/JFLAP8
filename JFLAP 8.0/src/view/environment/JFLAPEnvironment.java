@@ -21,9 +21,11 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 
-import debug.JFLAPDebug;
+import file.XMLFileChooser;
+import file.xml.XMLCodec;
 import model.automata.turing.TuringMachine;
 import model.graph.TransitionGraph;
 import universe.preferences.JFLAPPreferences.PREF_CHANGE;
@@ -31,6 +33,7 @@ import universe.preferences.PreferenceChangeListener;
 import util.JFLAPConstants;
 import view.EditingPanel;
 import view.ViewFactory;
+import view.algorithms.transform.NFAtoDFAPanel;
 import view.automata.editing.AutomatonEditorPanel;
 import view.automata.editing.BlockEditorPanel;
 import view.automata.views.AutomatonView;
@@ -48,16 +51,14 @@ import view.pumping.PumpingLemmaChooser;
 import view.pumping.PumpingLemmaChooserView;
 import view.pumping.PumpingLemmaInputView;
 import view.pumping.RegPumpingLemmaChooser;
-import file.XMLFileChooser;
-import file.xml.XMLCodec;
 
 public class JFLAPEnvironment extends JFrame implements
 		PreferenceChangeListener {
 
 	private File myFile;
 	private JTabbedPane myTabbedPane;
+	private JSplitPane mySplitPane;
 	private Component myPrimaryView;
-	private Component myPreviousOutput;
 	private boolean amDirty;
 	private int myID;
 	private List<TabChangeListener> myListeners;
@@ -80,10 +81,14 @@ public class JFLAPEnvironment extends JFrame implements
 
 		myID = id;
 		myTabbedPane = new SpecialTabbedPane();
+		mySplitPane = new JSplitPane();
 		
-		this.setLayout(new GridLayout(0,2));
 		myPrimaryView = component;
-		this.add(component);
+		
+		mySplitPane.setLeftComponent(component);
+		mySplitPane.setRightComponent(null);
+		this.add(mySplitPane);
+		//this.add(component);
 		//this.add(myTabbedPane);
 		
 		JFLAPMenuBar menu = MenuFactory.createMenu(this);
@@ -260,16 +265,17 @@ public class JFLAPEnvironment extends JFrame implements
 	}
 
 	public void addSelectedComponent(Component component) {
-		if(myPreviousOutput!=null)
-			this.remove(myPreviousOutput);
-		this.add(component);
+		System.out.println("Before size: " + getSize().width + " " + getSize().height);
+		setSize(new Dimension(2*getSize().width, getSize().height));
+		System.out.println("After size: " + getSize().width + " " + getSize().height);
+		mySplitPane.setRightComponent(component);
+		mySplitPane.setDividerLocation(0.4);
 		this.revalidate();
 		this.repaint();
-		myPreviousOutput = component;
 //		addView(component);
 //		myTabbedPane.setSelectedIndex(myTabbedPane.getTabCount() - 1);
 	}
-
+	
 	private void distributeTabChangedEvent() {
 		TabChangeListener[] listeners = myListeners.toArray(new TabChangeListener[0]);
 		
@@ -383,7 +389,8 @@ public class JFLAPEnvironment extends JFrame implements
 	}
 
 	public Component getCurrentView() {
-		return myTabbedPane.getSelectedComponent();
+		//return myTabbedPane.getSelectedComponent();
+		return mySplitPane.getRightComponent();
 	}
 
 	@Override
