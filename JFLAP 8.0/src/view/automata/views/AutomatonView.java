@@ -2,6 +2,8 @@ package view.automata.views;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -121,7 +123,21 @@ public class AutomatonView<T extends Automaton<S>, S extends Transition<S>>
 	    convertToDFA.addActionListener(new NFAtoDFAAction((FSAView)this));
 	    convertToDFA.setToolTipText("Convert the NFA to DFA");
 	    bar.add(convertToDFA);
+	    
+	    JButton changeLayout = new JButton("LayoutGraph");
+	    //changeLayout.addActionListener(new NFAtoDFAAction((FSAView)this));
+	    changeLayout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AutomatonEditorPanel<T, S> panel = (AutomatonEditorPanel<T, S>) getCentralPanel();
+
+				panel.layoutGraph();
+			}
+		});
+	    changeLayout.setToolTipText("Change the layout of the graph");
+	    bar.add(changeLayout);
+	    
 	    bar.setAlignmentX(0);
+	    
 		
 		return bar;
 	}
