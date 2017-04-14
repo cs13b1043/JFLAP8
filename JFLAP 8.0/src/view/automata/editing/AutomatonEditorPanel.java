@@ -41,7 +41,9 @@ import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.change.events.RemoveEvent;
 import model.change.events.StartStateSetEvent;
 import model.graph.LayoutAlgorithm;
+import model.graph.LayoutAlgorithmFactory;
 import model.graph.TransitionGraph;
+import model.graph.layout.VertexMover;
 import model.undo.CompoundUndoRedo;
 import model.undo.IUndoRedo;
 import model.undo.UndoKeeper;
@@ -567,6 +569,19 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	
 	public void layoutGraph(){
 		layoutGraph(new HashSet<State>());
+	}
+	
+	public void fitToScreen(){
+		Rectangle visible = getVisibleRect();
+		double vertexBuffer = JFLAPConstants.STATE_RADIUS * 2;
+
+		LayoutAlgorithm layout = LayoutAlgorithmFactory.getLayoutAlgorithm(VertexMover.FILL,
+				new Dimension(visible.width, visible.height),
+				new Dimension(JFLAPConstants.STATE_RADIUS + 5, JFLAPConstants.STATE_RADIUS + 5), vertexBuffer);
+		LayoutAlgorithm current = getLayoutAlgorithm();
+		setLayoutAlgorithm(layout);
+		layoutGraph();
+		setLayoutAlgorithm(current);
 	}
 
 	public void layoutGraph(Set<State> unmoving) {

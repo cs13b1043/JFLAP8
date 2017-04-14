@@ -3,11 +3,12 @@ package view.algorithms.transform;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.util.Set;
 
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import javax.swing.JSplitPane;
 
 import file.xml.graph.AutomatonEditorData;
 import model.algorithms.transform.fsa.NFAtoDFAConverter;
@@ -28,15 +29,12 @@ import view.automata.tools.algorithm.NonTransitionArrowTool;
 import view.automata.tools.algorithm.StateExpanderTool;
 import view.automata.tools.algorithm.TransitionExpanderTool;
 
-public class NFAtoDFAPanel extends
-		AutomatonDisplayPanel<FiniteStateAcceptor, FSATransition> {
+public class NFAtoDFAPanel extends AutomatonDisplayPanel<FiniteStateAcceptor, FSATransition> {
 
 	private NFAtoDFAConverter myAlg;
 	private AutomatonEditorPanel<FiniteStateAcceptor, FSATransition> myDFApanel;
 
-	public NFAtoDFAPanel(
-			AutomatonEditorPanel<FiniteStateAcceptor, FSATransition> nfa,
-			NFAtoDFAConverter convert) {
+	public NFAtoDFAPanel(AutomatonEditorPanel<FiniteStateAcceptor, FSATransition> nfa, NFAtoDFAConverter convert) {
 		super(nfa, nfa.getAutomaton(), "NFA to DFA");
 		myAlg = convert;
 		updateSize();
@@ -44,18 +42,19 @@ public class NFAtoDFAPanel extends
 	}
 
 	private void initView() {
-		//AutomatonEditorPanel<FiniteStateAcceptor, FSATransition> nfa = getEditorPanel();
-		myDFApanel = new AutomatonEditorPanel<FiniteStateAcceptor, FSATransition>(
-				myAlg.getDFA(), new UndoKeeper(), true);
+		// AutomatonEditorPanel<FiniteStateAcceptor, FSATransition> nfa =
+		// getEditorPanel();
+		myDFApanel = new AutomatonEditorPanel<FiniteStateAcceptor, FSATransition>(myAlg.getDFA(), new UndoKeeper(),
+				true);
 		myDFApanel.getActionMap().put(AutomatonEditorPanel.DELETE, null);
 		myDFApanel.updateBounds(getGraphics());
 
-		//MagnifiableScrollPane nScroll = new MagnifiableScrollPane(nfa);
+		// MagnifiableScrollPane nScroll = new MagnifiableScrollPane(nfa);
 		MagnifiableScrollPane dScroll = new MagnifiableScrollPane(myDFApanel);
-		//Dimension nSize = nfa.getMinimumSize();
-		//int padding = (int) (nfa.getStateBounds() - nfa.getStateRadius());
-		//nScroll.setMinimumSize(new Dimension(nSize.width + padding,
-		//		nSize.height));
+		// Dimension nSize = nfa.getMinimumSize();
+		// int padding = (int) (nfa.getStateBounds() - nfa.getStateRadius());
+		// nScroll.setMinimumSize(new Dimension(nSize.width + padding,
+		// nSize.height));
 		MagnifiablePanel right = new MagnifiablePanel(new BorderLayout());
 
 		ToolBar tools = createTools();
@@ -66,8 +65,8 @@ public class NFAtoDFAPanel extends
 		int width = (int) (rSize.width * 1.5);
 		right.setMinimumSize(new Dimension(width, rSize.height));
 
-		//split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, nScroll,
-		//		right);
+		// split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, nScroll,
+		// right);
 		add(right, BorderLayout.CENTER);
 
 		Dimension size = getPreferredSize();
@@ -89,8 +88,7 @@ public class NFAtoDFAPanel extends
 	private ToolBar createTools() {
 		NonTransitionArrowTool<FiniteStateAcceptor, FSATransition> arrow = new NonTransitionArrowTool<FiniteStateAcceptor, FSATransition>(
 				myDFApanel, myDFApanel.getAutomaton());
-		TransitionExpanderTool trans = new TransitionExpanderTool(myDFApanel,
-				myAlg);
+		TransitionExpanderTool trans = new TransitionExpanderTool(myDFApanel, myAlg);
 		StateExpanderTool state = new StateExpanderTool(myDFApanel, myAlg);
 
 		ToolBar tools = new ToolBar(arrow, trans, state);
@@ -98,12 +96,12 @@ public class NFAtoDFAPanel extends
 		myDFApanel.setTool(arrow);
 
 		tools.addSeparator();
-		tools.add(new TooltipAction("Complete",
-				"This will finish all expansion.") {
+		tools.add(new TooltipAction("Complete", "This will finish all expansion.") {
 			public void actionPerformed(ActionEvent e) {
 				while (myAlg.canStep()) {
 					myAlg.step();
-					// without the following line, this action will crash JFLAP. No idea
+					// without the following line, this action will crash JFLAP.
+					// No idea
 					// why, something to do with FontMetrics when drawing
 					// transition labels.
 					myDFApanel.layoutGraph();
@@ -115,14 +113,34 @@ public class NFAtoDFAPanel extends
 				done();
 			}
 		});
-		tools.add(new TooltipAction("Export",
-				"Display complete DFA in new window.") {
+		tools.add(new TooltipAction("Export", "Display complete DFA in new window.") {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				export();
 			}
 		});
+
+		JButton changeLayout = new JButton("LayoutGraph");
+		// changeLayout.addActionListener(new NFAtoDFAAction((FSAView)this));
+		changeLayout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// AutomatonEditorPanel<T, S> panel = (AutomatonEditorPanel<T,
+				// S>) getCentralPanel();
+				myDFApanel.layoutGraph();
+			}
+		});
+		changeLayout.setToolTipText("Change the layout of the graph");
+		
+		JButton fitScreen = new JButton("Fit to screen");
+		// changeLayout.addActionListener(new NFAtoDFAAction((FSAView)this));
+		fitScreen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				myDFApanel.fitToScreen();
+			}
+		});
+		fitScreen.setToolTipText("Fit to Screen");
+		tools.add(fitScreen);
 
 		return tools;
 	}
@@ -135,8 +153,7 @@ public class NFAtoDFAPanel extends
 					"The DFA will now be placed in a new window.");
 			AutomatonEditorData<FiniteStateAcceptor, FSATransition> data = new AutomatonEditorData<FiniteStateAcceptor, FSATransition>(
 					myDFApanel);
-			JFLAPUniverse.registerEnvironment(ViewFactory
-					.createAutomataView(data));
+			JFLAPUniverse.registerEnvironment(ViewFactory.createAutomataView(data));
 		}
 	}
 
@@ -149,22 +166,16 @@ public class NFAtoDFAPanel extends
 			String statesRemaining = "All the states are there.\n";
 			if (stateSize != 0) {
 				String stateString = states.toString();
-				stateString = stateString
-						.substring(1, stateString.length() - 1);
-				statesRemaining = "State" + (stateSize == 1 ? " " : "s ")
-						+ stateString + " must be expanded.\n";
+				stateString = stateString.substring(1, stateString.length() - 1);
+				statesRemaining = "State" + (stateSize == 1 ? " " : "s ") + stateString + " must be expanded.\n";
 			}
 			String trans = transitionsRemaining == 0 ? "All the transitions are there.\n"
-					: transitionsRemaining + " more transition"
-							+ (transitionsRemaining == 1 ? "" : "s")
+					: transitionsRemaining + " more transition" + (transitionsRemaining == 1 ? "" : "s")
 							+ " must be placed.\n";
-			String message = "The DFA has not been completed.\n"
-					+ statesRemaining + trans;
-			JOptionPane.showMessageDialog(JFLAPUniverse.getActiveEnvironment(),
-					message);
+			String message = "The DFA has not been completed.\n" + statesRemaining + trans;
+			JOptionPane.showMessageDialog(JFLAPUniverse.getActiveEnvironment(), message);
 			return;
 		} else
-			JOptionPane.showMessageDialog(JFLAPUniverse.getActiveEnvironment(),
-					"The DFA is fully built!");
+			JOptionPane.showMessageDialog(JFLAPUniverse.getActiveEnvironment(), "The DFA is fully built!");
 	}
 }

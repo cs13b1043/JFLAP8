@@ -5,12 +5,14 @@ import java.awt.Component;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -120,6 +122,29 @@ public class RegularExpressionToFAPanel extends AutomatonDisplayPanel<FiniteStat
 				export();
 			}
 		});
+		
+
+		JButton changeLayout = new JButton("LayoutGraph");
+		// changeLayout.addActionListener(new NFAtoDFAAction((FSAView)this));
+		changeLayout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// AutomatonEditorPanel<T, S> panel = (AutomatonEditorPanel<T,
+				// S>) getCentralPanel();
+				panel.layoutGraph();
+			}
+		});
+		changeLayout.setToolTipText("Change the layout of the graph");
+		tools.add(changeLayout);
+		
+		JButton fitScreen = new JButton("Fit to screen");
+		// changeLayout.addActionListener(new NFAtoDFAAction((FSAView)this));
+		fitScreen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panel.fitToScreen();
+			}
+		});
+		fitScreen.setToolTipText("Fit to Screen");
+		tools.add(fitScreen);
 		return tools;
 	}
 

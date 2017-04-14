@@ -4,12 +4,17 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import debug.JFLAPDebug;
+import model.algorithms.conversion.regextofa.RegularExpressionToNFAConversion;
 import model.automata.InputAlphabet;
+import model.automata.acceptors.fsa.FSATransition;
+import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.change.events.AdvancedChangeEvent;
 import model.formaldef.components.ChangeTypes;
 import model.regex.RegularExpression;
@@ -18,11 +23,16 @@ import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
 import model.undo.IUndoRedo;
 import model.undo.UndoKeeper;
+import universe.JFLAPUniverse;
 import universe.preferences.JFLAPPreferences;
 import util.view.magnify.MagnifiableLabel;
 import util.view.magnify.MagnifiablePanel;
 import util.view.magnify.MagnifiableTextField;
 import view.EditingPanel;
+import view.action.automata.FastSimulateAction;
+import view.algorithms.conversion.regextofa.RegularExpressionToFAPanel;
+import view.automata.editing.AutomatonEditorPanel;
+import view.automata.views.FSAView;
 import errors.BooleanWrapper;
 
 public class RegexPanel extends EditingPanel {
@@ -30,14 +40,12 @@ public class RegexPanel extends EditingPanel {
 	private RegularExpression myExpression;
 	private MagnifiableTextField myField;
 
-	public RegexPanel(RegularExpression regex, UndoKeeper keeper,
-			boolean editable) {
+	public RegexPanel(RegularExpression regex, UndoKeeper keeper, boolean editable) {
 		super(keeper, editable);
 		setLayout(new BorderLayout());
 
 		myExpression = regex;
-		myField = new MagnifiableTextField(
-				JFLAPPreferences.getDefaultTextSize());
+		myField = new MagnifiableTextField(JFLAPPreferences.getDefaultTextSize());
 		SymbolString symbols = myExpression.getExpression();
 		myField.setText(symbols == null ? "" : symbols.toString());
 		initView();
@@ -45,19 +53,28 @@ public class RegexPanel extends EditingPanel {
 
 	private void initView() {
 		MagnifiablePanel regexPanel = new MagnifiablePanel(new BorderLayout());
-		regexPanel.add(
-				new MagnifiableLabel("Expression: ", JFLAPPreferences
-						.getDefaultTextSize()), BorderLayout.NORTH);
+		regexPanel.add(new MagnifiableLabel("Expression: ", JFLAPPreferences.getDefaultTextSize()), BorderLayout.NORTH);
 		regexPanel.add(myField, BorderLayout.CENTER);
-
+		regexPanel
+				.add(new MagnifiableLabel("Edit the regular expression above. " + JFLAPPreferences.getEmptySubLiteral()
+						+ " is the empty string sub.", JFLAPPreferences.getDefaultTextSize()), BorderLayout.SOUTH);
 		add(regexPanel, BorderLayout.CENTER);
-		add(new MagnifiableLabel("Edit the regular expression above. "
-				+ JFLAPPreferences.getEmptySubLiteral()
-				+ " is the empty string sub.", JFLAPPreferences.getDefaultTextSize()), BorderLayout.SOUTH);
+		
+		JToolBar bar = new JToolBar();
+		JButton convertREtoNFA = new JButton("Convert NFA");
+		convertREtoNFA.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO
+			}
+		});
+		convertREtoNFA.setToolTipText("Convert RE to NFA");
+		bar.add(convertREtoNFA);
+		
+		add(bar, BorderLayout.SOUTH);
 		initListener();
 	}
-	
-	
 
 	private void initListener() {
 		myField.addActionListener(new ActionListener() {
@@ -67,15 +84,16 @@ public class RegexPanel extends EditingPanel {
 				update();
 			}
 		});
-		
+
 		myExpression.addListener(new ChangeListener() {
-			
+
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				if(e.getSource() instanceof InputAlphabet){
-//					if(((AdvancedChangeEvent) e).getType() == ChangeTypes.ITEM_MODIFIED){
-						myField.setText(myExpression.getExpressionString());
-//					}
+				if (e.getSource() instanceof InputAlphabet) {
+					// if(((AdvancedChangeEvent) e).getType() ==
+					// ChangeTypes.ITEM_MODIFIED){
+					myField.setText(myExpression.getExpressionString());
+					// }
 				}
 			}
 		});

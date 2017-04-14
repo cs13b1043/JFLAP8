@@ -22,8 +22,7 @@ import util.view.GraphHelper;
 import view.automata.editing.AutomatonEditorPanel;
 import util.JFLAPConstants;
 
-public class TransitionTool<T extends Automaton<S>, S extends Transition<S>>
-		extends EditingTool<T, S> {
+public class TransitionTool<T extends Automaton<S>, S extends Transition<S>> extends EditingTool<T, S> {
 
 	private State from;
 	private Point2D pCurrent;
@@ -38,7 +37,8 @@ public class TransitionTool<T extends Automaton<S>, S extends Transition<S>>
 
 	@Override
 	public String getToolTip() {
-		return "Transition Creator";
+		return "Transition Creator- KeyboardShortcut(T)- Drag from one state to another to create a transition and then give a label to the transition ";
+
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class TransitionTool<T extends Automaton<S>, S extends Transition<S>>
 		if (hasFrom()) {
 			AutomatonEditorPanel<T, S> panel = getPanel();
 			Object obj = panel.objectAtPoint(e.getPoint());
-			
+
 			if (obj instanceof State) {
 				S trans = createTransition(panel, obj);
 				panel.editTransition(trans, true);
@@ -101,43 +101,41 @@ public class TransitionTool<T extends Automaton<S>, S extends Transition<S>>
 		if (hasFrom()) {
 			Graphics2D g2 = (Graphics2D) g;
 			Stroke s = g2.getStroke();
-			
+
 			g2.setStroke(JFLAPConstants.DEFAULT_TRANSITION_STROKE);
 			g2.setColor(JFLAPConstants.DEFAULT_TRANS_TOOL_COLOR);
-			
-			//Self State transition - curved arrow
-			if(dist(pFrom, pCurrent)<30){
+
+			// Self State transition - curved arrow
+			if (dist(pFrom, pCurrent) < 30) {
 				double rad = JFLAPConstants.STATE_RADIUS;
-				double theta1=-Math.PI/4;
-				double theta2=-3*Math.PI/4;
-					
-				Point2D edgeFrom = GeometryHelper.pointOnCircle(pFrom,rad,theta1);
-				Point2D edgeTo = GeometryHelper.pointOnCircle(pFrom,rad,theta2);
-				
-				double arrowheadLen=JFLAPConstants.ARROW_LENGTH;
+				double theta1 = -Math.PI / 4;
+				double theta2 = -3 * Math.PI / 4;
+
+				Point2D edgeFrom = GeometryHelper.pointOnCircle(pFrom, rad, theta1);
+				Point2D edgeTo = GeometryHelper.pointOnCircle(pFrom, rad, theta2);
+
+				double arrowheadLen = JFLAPConstants.ARROW_LENGTH;
 				CurvedArrow curve = new CurvedArrow(arrowheadLen, JFLAPConstants.ARROW_ANGLE);
-				
-				curve.setCurve(edgeFrom, new Point2DAdv((int)pFrom.getX(), (int)pFrom.getY()-80), edgeTo);
+
+				curve.setCurve(edgeFrom, new Point2DAdv((int) pFrom.getX(), (int) pFrom.getY() - 80), edgeTo);
 				curve.draw(g2);
-			}
-			else{
-			g2.drawLine((int) pFrom.getX(), (int) pFrom.getY(),
-					(int) pCurrent.getX(), (int) pCurrent.getY());
+			} else {
+				g2.drawLine((int) pFrom.getX(), (int) pFrom.getY(), (int) pCurrent.getX(), (int) pCurrent.getY());
 			}
 			g2.setStroke(s);
 		}
 	}
 
 	private int dist(Point2D from, Point2D to) {
-		int temp1 = (int) Math.pow(from.getX()-to.getX(),2);
-		int temp2 = (int) Math.pow(from.getY()-to.getY(),2);
-		return (int) Math.sqrt(temp1+temp2);
+		int temp1 = (int) Math.pow(from.getX() - to.getX(), 2);
+		int temp2 = (int) Math.pow(from.getY() - to.getY(), 2);
+		return (int) Math.sqrt(temp1 + temp2);
 	}
 
 	public boolean hasFrom() {
 		return from != null;
 	}
-	
+
 	public State getFrom() {
 		return from;
 	}

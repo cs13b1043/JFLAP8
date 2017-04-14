@@ -5,7 +5,7 @@ import model.regex.RegularExpression;
 public class NewRegexAction extends NewFormalDefinitionAction<RegularExpression>{
 
 	public NewRegexAction() {
-		super("Regular Expression");
+		super("Go to RE panel");
 	}
 
 	@Override

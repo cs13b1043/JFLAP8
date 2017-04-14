@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.Arrays;
 
@@ -27,14 +28,15 @@ import view.automata.tools.algorithm.NonTransitionArrowTool;
 import view.automata.tools.algorithm.StateCollapseTool;
 import view.automata.tools.algorithm.TransitionCollapseTool;
 
-public class FAToREPanel extends AutomatonDisplayPanel<FiniteStateAcceptor, FSATransition>{
+public class FAToREPanel extends AutomatonDisplayPanel<FiniteStateAcceptor, FSATransition> {
 
 	private DFAtoRegularExpressionConverter myAlg;
 	private JLabel myMainLabel;
 	private JLabel myDetailLabel;
 	private FAToREController myController;
-	
-	public FAToREPanel(AutomatonEditorPanel<FiniteStateAcceptor, FSATransition> editor, DFAtoRegularExpressionConverter convert) {
+
+	public FAToREPanel(AutomatonEditorPanel<FiniteStateAcceptor, FSATransition> editor,
+			DFAtoRegularExpressionConverter convert) {
 		super(editor, editor.getAutomaton(), "Convert FA to RE");
 		myAlg = convert;
 		updateSize();
@@ -46,70 +48,74 @@ public class FAToREPanel extends AutomatonDisplayPanel<FiniteStateAcceptor, FSAT
 		myMainLabel = new JLabel(" ");
 		myDetailLabel = new JLabel(" ");
 		myController = new FAToREController(this);
-		
+
 		labels.add(myMainLabel, BorderLayout.NORTH);
-		labels.add(myDetailLabel,  BorderLayout.SOUTH);
+		labels.add(myDetailLabel, BorderLayout.SOUTH);
 		add(labels, BorderLayout.NORTH);
-		
+
 		ToolBar tools = createToolBar();
 		JScrollPane scroll = new JScrollPane(getEditorPanel());
 		scroll.revalidate();
 		JPanel center = new JPanel(new BorderLayout());
-		
+
 		center.add(tools, BorderLayout.EAST);
 		center.add(scroll, BorderLayout.CENTER);
 		add(center, BorderLayout.CENTER);
-		
+
 		Dimension size = getPreferredSize();
 		int height = size.height;
 		height += tools.getPreferredSize().height;
 		height += labels.getPreferredSize().height;
-		
+
 		setPreferredSize(new Dimension(size.width, height));
 	}
 
 	private ToolBar createToolBar() {
 		AutomatonEditorPanel<FiniteStateAcceptor, FSATransition> panel = getEditorPanel();
-		
-		NonTransitionArrowTool<FiniteStateAcceptor, FSATransition> arrow = new NonTransitionArrowTool<FiniteStateAcceptor, FSATransition>(panel, panel.getAutomaton());
+
+		NonTransitionArrowTool<FiniteStateAcceptor, FSATransition> arrow = new NonTransitionArrowTool<FiniteStateAcceptor, FSATransition>(
+				panel, panel.getAutomaton());
 		FAtoREStateTool state = new FAtoREStateTool(panel, myController);
 		FAtoRETransitionTool trans = new FAtoRETransitionTool(panel, myController);
 		TransitionCollapseTool tCollapse = new TransitionCollapseTool(panel, myController);
 		StateCollapseTool sCollapse = new StateCollapseTool(panel, myController);
-		
+
 		ToolBar tools = new ToolBar(arrow, state, trans, tCollapse, sCollapse);
 		tools.addToolListener(panel);
 		panel.setTool(arrow);
-		
+
 		tools.addSeparator();
-		
-		ImageIcon prev_icon = new ImageIcon( Toolkit.getDefaultToolkit().getImage(getClass().getResource("/ICON/prev.png")));
+
+		ImageIcon prev_icon = new ImageIcon(
+				Toolkit.getDefaultToolkit().getImage(getClass().getResource("/ICON/prev.png")));
 		tools.add(new AbstractAction("Step", prev_icon) {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO myController.step();
+				// TODO myController.step();
 			}
 		});
-		
-		ImageIcon next_icon = new ImageIcon( Toolkit.getDefaultToolkit().getImage(getClass().getResource("/ICON/next.png")));
+
+		ImageIcon next_icon = new ImageIcon(
+				Toolkit.getDefaultToolkit().getImage(getClass().getResource("/ICON/next.png")));
 		tools.add(new AbstractAction("Step", next_icon) {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				myController.step();
 			}
 		});
-		
-		ImageIcon final_icon = new ImageIcon( Toolkit.getDefaultToolkit().getImage(getClass().getResource("/ICON/tick.png")));
+
+		ImageIcon final_icon = new ImageIcon(
+				Toolkit.getDefaultToolkit().getImage(getClass().getResource("/ICON/tick.png")));
 		tools.add(new AbstractAction("Step to Completion", final_icon) {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				myController.step();
-				
-				if(myAlg.hasSingleFinal())
-					while(myAlg.canStep())
+
+				if (myAlg.hasSingleFinal())
+					while (myAlg.canStep())
 						myController.step();
 			}
 		});
@@ -118,6 +124,29 @@ public class FAToREPanel extends AutomatonDisplayPanel<FiniteStateAcceptor, FSAT
 				myController.export();
 			}
 		}));
+
+		
+		JButton changeLayout = new JButton("LayoutGraph");
+		// changeLayout.addActionListener(new NFAtoDFAAction((FSAView)this));
+		changeLayout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// AutomatonEditorPanel<T, S> panel = (AutomatonEditorPanel<T,
+				// S>) getCentralPanel();
+				panel.layoutGraph();
+			}
+		});
+		changeLayout.setToolTipText("Change the layout of the graph");
+		tools.add(changeLayout);
+		
+		JButton fitScreen = new JButton("Fit to screen");
+		// changeLayout.addActionListener(new NFAtoDFAAction((FSAView)this));
+		fitScreen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panel.fitToScreen();
+			}
+		});
+		fitScreen.setToolTipText("Fit to Screen");
+		tools.add(fitScreen);
 		return tools;
 	}
 
@@ -132,18 +161,14 @@ public class FAToREPanel extends AutomatonDisplayPanel<FiniteStateAcceptor, FSAT
 	public void setMainText(String string) {
 		myMainLabel.setText(string);
 	}
-	
+
 	public void setDetailText(String string) {
 		myDetailLabel.setText(string);
 	}
 
-
-
 	public void deselect(State from) {
 		getEditorPanel().deselectObject(from);
 	}
-
-
 
 	public void selectAll(Object... objs) {
 		AutomatonEditorPanel<FiniteStateAcceptor, FSATransition> panel = getEditorPanel();

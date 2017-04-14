@@ -7,19 +7,17 @@ import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
 
-
+import model.formaldef.FormalDefinition;
+import model.undo.UndoKeeper;
 import util.view.magnify.Magnifiable;
 import util.view.magnify.SizeSlider;
 import view.EditingPanel;
 import view.undoing.UndoPanel;
 
-import model.formaldef.FormalDefinition;
-import model.undo.UndoKeeper;
+public abstract class FormalDefinitionView<T, S extends FormalDefinition> extends EditingPanel {
 
-public abstract class FormalDefinitionView<T, S extends FormalDefinition> extends EditingPanel{
-
-	
 	private FormalDefinitionPanel myDefinitionPanel;
 	private JComponent myCentralPanel;
 	private UndoKeeper myKeeper;
@@ -27,31 +25,44 @@ public abstract class FormalDefinitionView<T, S extends FormalDefinition> extend
 	private SizeSlider slider;
 	private JScrollPane scroller;
 
-	public FormalDefinitionView(T model, UndoKeeper keeper, boolean editable){
+	public FormalDefinitionView(T model, UndoKeeper keeper, boolean editable) {
 		super(keeper, editable);
-		
+
 		this.setLayout(new BorderLayout());
 		myModel = model;
 		myKeeper = keeper;
 		myDefinitionPanel = new FormalDefinitionPanel(getDefinition(), keeper, editable);
 		myCentralPanel = createCentralPanel(myModel, keeper, editable);
-		
+
 		scroller = new JScrollPane(myCentralPanel);
 		slider = new SizeSlider(myDefinitionPanel);
 		if (myCentralPanel instanceof Magnifiable)
 			slider.addListener((Magnifiable) myCentralPanel);
 		slider.distributeMagnification();
-		
+
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 		panel.add(myDefinitionPanel);
 		panel.add(slider);
-		
+
 		this.add(scroller, BorderLayout.CENTER);
 		this.add(panel, BorderLayout.SOUTH);
-		
-		if (editable)
+
+		if (editable) {
 			this.add(createToolbar(getDefinition(), keeper), BorderLayout.EAST);
+			this.add(createConvertbar(getDefinition(), keeper), BorderLayout.SOUTH);
+			this.add(createViewbar(getDefinition(), keeper), BorderLayout.NORTH);
+		}
+
+	}
+
+	public JToolBar createConvertbar(S definition, UndoKeeper keeper) {
+
+		return new JToolBar();
+	}
+
+	public JToolBar createViewbar(S definition, UndoKeeper keeper) {
+		return new JToolBar();
 	}
 
 	public Component createToolbar(S definition, UndoKeeper keeper) {
@@ -59,31 +70,31 @@ public abstract class FormalDefinitionView<T, S extends FormalDefinition> extend
 	}
 
 	public abstract JComponent createCentralPanel(T model, UndoKeeper keeper, boolean editable);
-	
-	public Component getCentralPanel(){
+
+	public Component getCentralPanel() {
 		return myCentralPanel;
 	}
-	
-	public void setCentralPanel(JComponent panel){
+
+	public void setCentralPanel(JComponent panel) {
 		myCentralPanel = panel;
 		revalidate();
 		repaint();
 	}
-	
-	public T getModel(){
+
+	public T getModel() {
 		return myModel;
 	}
-	
-	public JScrollPane getScroller(){
+
+	public JScrollPane getScroller() {
 		return scroller;
 	}
-	
+
 	public void distributeMagnifiation() {
 		slider.distributeMagnification();
 	}
-	
+
 	public abstract S getDefinition();
-	
+
 	@Override
 	public abstract String getName();
 }
