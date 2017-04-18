@@ -2,8 +2,6 @@ package view.automata.views;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,15 +13,13 @@ import javax.swing.JToolBar;
 import file.xml.graph.AutomatonEditorData;
 import model.automata.Automaton;
 import model.automata.Transition;
-import model.graph.LayoutAlgorithm;
-import model.graph.LayoutAlgorithmFactory;
-import model.graph.layout.VertexMover;
 import model.undo.UndoKeeper;
-import util.JFLAPConstants;
 import view.action.automata.DFAtoREAction;
 import view.action.automata.FastSimulateAction;
+import view.action.automata.IntersectionAutomataAction;
+import view.action.automata.InvertAutomataAction;
 import view.action.automata.NFAtoDFAAction;
-import view.automata.AutomatonDisplayPanel;
+import view.action.automata.UnionAutomataAction;
 import view.automata.editing.AutomatonEditorPanel;
 import view.automata.tools.ArrowTool;
 import view.automata.tools.DeleteTool;
@@ -116,6 +112,21 @@ public class AutomatonView<T extends Automaton<S>, S extends Transition<S>> exte
 		convertToDFA.addActionListener(new NFAtoDFAAction((FSAView) this));
 		convertToDFA.setToolTipText("Convert the NFA to DFA");
 		bar.add(convertToDFA);
+		
+		JButton invert = new JButton("Complement");
+		invert.addActionListener(new InvertAutomataAction((FSAView) this));
+		invert.setToolTipText("Complement of Finite Automaton");
+		bar.add(invert);
+
+		JButton union = new JButton("Union");
+		union.addActionListener(new UnionAutomataAction((FSAView) this));
+		union.setToolTipText("Union of Finite Automata");
+		bar.add(union);
+		
+		JButton intersection = new JButton("Intersection");
+		intersection.addActionListener(new IntersectionAutomataAction((FSAView) this));
+		intersection.setToolTipText("Intersection of Finite Automata");
+		bar.add(intersection);
 
 		bar.setAlignmentX(0);
 
