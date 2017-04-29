@@ -35,7 +35,9 @@ public class DeleteTool<T extends Automaton<S>, S extends Transition<S>>
 
 	@Override
 	public String getToolTip() {
-		return "Deleter - KeyboardShortcut(D) - Click on a state or transition to delete it.";
+		return "<html>Deleter<br>"
+				+ "KeyboardShortcut(D)<br>"
+				+ "Click on a state or transition to delete it.</html>";
 	}
 
 	@Override
@@ -46,7 +48,7 @@ public class DeleteTool<T extends Automaton<S>, S extends Transition<S>>
 	@Override
 	public String getImageURLString() {
 		
-		return "/ICON/delete.gif";
+		return "/ICON/delete.png";
 	}
 
 	@Override

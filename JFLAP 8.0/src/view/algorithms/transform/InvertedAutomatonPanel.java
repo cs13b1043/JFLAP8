@@ -5,14 +5,12 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
-import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 import file.xml.graph.AutomatonEditorData;
 import model.algorithms.transform.fsa.InvertAutomataConverter;
-import model.algorithms.transform.fsa.NFAtoDFAConverter;
 import model.automata.State;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
@@ -27,15 +25,14 @@ import view.automata.editing.AutomatonEditorPanel;
 import view.automata.simulate.TooltipAction;
 import view.automata.tools.ToolBar;
 import view.automata.tools.algorithm.NonTransitionArrowTool;
-import view.automata.tools.algorithm.StateExpanderTool;
-import view.automata.tools.algorithm.TransitionExpanderTool;
 
 public class InvertedAutomatonPanel extends AutomatonDisplayPanel<FiniteStateAcceptor, FSATransition> {
 
 	private InvertAutomataConverter myAlg;
 	private AutomatonEditorPanel<FiniteStateAcceptor, FSATransition> myDFApanel;
 
-	public InvertedAutomatonPanel(AutomatonEditorPanel<FiniteStateAcceptor, FSATransition> nfa, InvertAutomataConverter convert) {
+	public InvertedAutomatonPanel(AutomatonEditorPanel<FiniteStateAcceptor, FSATransition> nfa,
+			InvertAutomataConverter convert) {
 		super(nfa, nfa.getAutomaton(), "Complement FSA");
 		myAlg = convert;
 		updateSize();
@@ -74,7 +71,7 @@ public class InvertedAutomatonPanel extends AutomatonDisplayPanel<FiniteStateAcc
 		rSize = right.getMinimumSize();
 		width = size.width + rSize.width;
 		setPreferredSize(new Dimension(width, size.height));
-		//moveStartState(tools.getPreferredSize().width);
+		// moveStartState(tools.getPreferredSize().width);
 
 	}
 
@@ -89,21 +86,33 @@ public class InvertedAutomatonPanel extends AutomatonDisplayPanel<FiniteStateAcc
 	private ToolBar createTools() {
 		NonTransitionArrowTool<FiniteStateAcceptor, FSATransition> arrow = new NonTransitionArrowTool<FiniteStateAcceptor, FSATransition>(
 				myDFApanel, myDFApanel.getAutomaton());
-		
-		//TransitionExpanderTool trans = new TransitionExpanderTool(myDFApanel, myAlg);
-		//StateExpanderTool state = new StateExpanderTool(myDFApanel, myAlg);
 
-		//ToolBar tools = new ToolBar(arrow, trans, state);
-		//tools.addToolListener(myDFApanel);
-		//myDFApanel.setTool(arrow);
+		// TransitionExpanderTool trans = new TransitionExpanderTool(myDFApanel,
+		// myAlg);
+		// StateExpanderTool state = new StateExpanderTool(myDFApanel, myAlg);
 
-		//tools.addSeparator();
-		ToolBar tools= new ToolBar();
-		
-		tools.add(new TooltipAction("Complete", "This will finish all expansion.") {
+		// ToolBar tools = new ToolBar(arrow, trans, state);
+		// tools.addToolListener(myDFApanel);
+		// myDFApanel.setTool(arrow);
+
+		// tools.addSeparator();
+		ToolBar tools = new ToolBar();
+
+		tools.add(new TooltipAction("Next", "Next step") {
+			public void actionPerformed(ActionEvent e) {
+				if (myAlg.canStep()) {
+					myAlg.step();
+					System.out.println("Step finish");
+					// myDFApanel.layoutGraph();
+				}
+			}
+		});
+
+		tools.add(new TooltipAction("Complete", "Final Result") {
 			public void actionPerformed(ActionEvent e) {
 				while (myAlg.canStep()) {
 					myAlg.step();
+					System.out.println("whole finish");
 					// without the following line, this action will crash JFLAP.
 					// No idea
 					// why, something to do with FontMetrics when drawing
@@ -112,20 +121,16 @@ public class InvertedAutomatonPanel extends AutomatonDisplayPanel<FiniteStateAcc
 				}
 			}
 		});
-		
+
 		/*
-		tools.add(new TooltipAction("Done?", "Are we finished?") {
-			public void actionPerformed(ActionEvent e) {
-				done();
-			}
-		});
-		*/
-		
-		
+		 * tools.add(new TooltipAction("Done?", "Are we finished?") { public
+		 * void actionPerformed(ActionEvent e) { done(); } });
+		 */
+
 		tools.add(new TooltipAction("Export", "Display complete DFA in new window.") {
 
 			@Override
-			public void  actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				export();
 			}
 		});
@@ -141,7 +146,7 @@ public class InvertedAutomatonPanel extends AutomatonDisplayPanel<FiniteStateAcc
 		});
 		changeLayout.setToolTipText("Change the layout of the graph");
 		tools.add(changeLayout);
-		
+
 		JButton fitScreen = new JButton("Fit to screen");
 		// changeLayout.addActionListener(new NFAtoDFAAction((FSAView)this));
 		fitScreen.addActionListener(new ActionListener() {

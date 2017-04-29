@@ -4,6 +4,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -34,7 +36,7 @@ import view.undoing.redo.RedoButton;
 import view.undoing.undo.UndoButton;
 
 public class AutomatonView<T extends Automaton<S>, S extends Transition<S>> extends BasicFormalDefinitionView<T> {
-	private static final Dimension AUTOMATON_SIZE = new Dimension(500, 600);
+	private static final Dimension AUTOMATON_SIZE = new Dimension(600, 600);
 
 	public AutomatonView(T model) {
 		this(model, new UndoKeeper(), true);
@@ -88,8 +90,14 @@ public class AutomatonView<T extends Automaton<S>, S extends Transition<S>> exte
 		AutomataUndoAction undo = new AutomataUndoAction(keeper, panel);
 		RedoAction redo = new AutomataRedoAction(keeper, panel);
 
-		bar.add(new UndoButton(undo, true));
-		bar.add(new RedoButton(redo, true));
+		UndoButton undoB = new UndoButton(undo, true);
+		undoB.setToolTipText("Undo");
+		
+		RedoButton redoB = new RedoButton(redo, true);
+		redoB.setToolTipText("Redo");
+		
+		bar.add(undoB);
+		bar.add(redoB);
 		return bar;
 	}
 

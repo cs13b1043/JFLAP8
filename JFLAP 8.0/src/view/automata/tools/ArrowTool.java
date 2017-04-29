@@ -92,7 +92,9 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 
 	@Override
 	public String getToolTip() {
-		return "Attribute Editor- Keyboard Shortcut(A) - Right click on a state or arrow to change its attributes";
+		return "<html> Attribute Editor<br>"
+				+ " Keyboard Shortcut(A)<br> "
+				+ "Right click on a state or arrow to change its attributes</html>";
 	}
 
 	@Override

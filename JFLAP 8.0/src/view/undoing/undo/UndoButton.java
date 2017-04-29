@@ -46,9 +46,7 @@ public class UndoButton extends UndoRelatedButton implements UndoKeeperListener{
 
 	@Override
 	public String getIconFilename() {
-		return "/ICON/undo2.jpg";
+		return "/ICON/undo.png";
 	}
-
-
 
 }

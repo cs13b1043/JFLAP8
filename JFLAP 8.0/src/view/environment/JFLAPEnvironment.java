@@ -3,7 +3,6 @@ package view.environment;
 import java.awt.AWTKeyStroke;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
@@ -33,27 +32,15 @@ import universe.preferences.PreferenceChangeListener;
 import util.JFLAPConstants;
 import view.EditingPanel;
 import view.ViewFactory;
-import view.algorithms.transform.NFAtoDFAPanel;
 import view.automata.editing.AutomatonEditorPanel;
 import view.automata.editing.BlockEditorPanel;
 import view.automata.views.AutomatonView;
 import view.automata.views.BlockTMView;
 import view.automata.views.TuringMachineView;
 import view.formaldef.FormalDefinitionView;
-import view.grammar.parsing.cyk.CYKParseView;
-import view.lsystem.LSystemRenderView;
 import view.menus.JFLAPMenuBar;
-import view.pumping.CFPumpingLemmaChooser;
-import view.pumping.CompCFPumpingLemmaInputView;
-import view.pumping.ComputerFirstView;
-import view.pumping.HumanCFPumpingLemmaInputView;
-import view.pumping.PumpingLemmaChooser;
-import view.pumping.PumpingLemmaChooserView;
-import view.pumping.PumpingLemmaInputView;
-import view.pumping.RegPumpingLemmaChooser;
 
-public class JFLAPEnvironment extends JFrame implements
-		PreferenceChangeListener {
+public class JFLAPEnvironment extends JFrame implements PreferenceChangeListener {
 
 	private File myFile;
 	private JTabbedPane myTabbedPane;
@@ -70,8 +57,6 @@ public class JFLAPEnvironment extends JFrame implements
 	public JFLAPEnvironment(File f, int id) {
 		this(ViewFactory.createView(f), id);
 		setFile(f);
-		if (myPrimaryView instanceof PumpingLemmaInputView)
-			addPLChooser();
 	}
 
 	public JFLAPEnvironment(Component component, int id) {
@@ -82,15 +67,15 @@ public class JFLAPEnvironment extends JFrame implements
 		myID = id;
 		myTabbedPane = new SpecialTabbedPane();
 		mySplitPane = new JSplitPane();
-		
+
 		myPrimaryView = component;
-		
+
 		mySplitPane.setLeftComponent(component);
 		mySplitPane.setRightComponent(null);
 		this.add(mySplitPane);
-		//this.add(component);
-		//this.add(myTabbedPane);
-		
+		// this.add(component);
+		// this.add(myTabbedPane);
+
 		JFLAPMenuBar menu = MenuFactory.createMenu(this);
 		this.setJMenuBar(menu);
 		// I believe this is needed to make sure it doesn't close on
@@ -123,8 +108,7 @@ public class JFLAPEnvironment extends JFrame implements
 
 	private void setFile(File f) {
 		myFile = f;
-		this.setTitle(JFLAPConstants.VERSION_STRING + "(" + myFile.getName()
-				+ ")");
+		this.setTitle(JFLAPConstants.VERSION_STRING + "(" + myFile.getName() + ")");
 	}
 
 	@Override
@@ -142,8 +126,7 @@ public class JFLAPEnvironment extends JFrame implements
 		// Should check if there's any actual information to save
 		if (save && this.isDirty() && getSavableObject() != null) {
 			int result = showConfirmDialog("Save changes before closing?");
-			if (result == JOptionPane.CLOSED_OPTION
-					|| result == JOptionPane.CANCEL_OPTION) {
+			if (result == JOptionPane.CLOSED_OPTION || result == JOptionPane.CANCEL_OPTION) {
 				return false;
 			}
 			if (result == JOptionPane.YES_OPTION) {
@@ -173,17 +156,16 @@ public class JFLAPEnvironment extends JFrame implements
 		while (n == JFileChooser.APPROVE_OPTION) {
 			myFile = chooser.getSelectedFile();
 
-			if (!chooser.accept(myFile)){
+			if (!chooser.accept(myFile)) {
 				String path = myFile.getAbsolutePath();
-				if(path.endsWith(JFLAPConstants.JFF_SUFFIX))
+				if (path.endsWith(JFLAPConstants.JFF_SUFFIX))
 					path = path.substring(0, path.length() - JFLAPConstants.JFF_SUFFIX.length());
 				myFile = new File(path + JFLAPConstants.JFLAP_SUFFIX);
 			}
 			if (myFile.exists()) {
 				int confirm = showConfirmDialog("File exists. Overwrite file?");
 
-				if (confirm == JOptionPane.CANCEL_OPTION
-						|| confirm == JOptionPane.CLOSED_OPTION) {
+				if (confirm == JOptionPane.CANCEL_OPTION || confirm == JOptionPane.CLOSED_OPTION) {
 					myFile = temp;
 					return false;
 				}
@@ -193,8 +175,7 @@ public class JFLAPEnvironment extends JFrame implements
 				}
 			}
 			// Either file is new or user chose to overwrite existing file
-			setTitle(JFLAPConstants.VERSION_STRING + "(" + myFile.getName()
-					+ ")");
+			setTitle(JFLAPConstants.VERSION_STRING + "(" + myFile.getName() + ")");
 			XMLCodec codec = new XMLCodec();
 
 			codec.encode(obj, myFile, null);
@@ -221,10 +202,7 @@ public class JFLAPEnvironment extends JFrame implements
 				return ((AutomatonView) c).createData();
 			} else if (c instanceof FormalDefinitionView) {
 				return ((FormalDefinitionView) c).getDefinition();
-			} else if (c instanceof PumpingLemmaInputView) {
-				return ((PumpingLemmaInputView) c).getLemma();
 			}
-
 		}
 		return null;
 	}
@@ -265,23 +243,24 @@ public class JFLAPEnvironment extends JFrame implements
 	}
 
 	public void addSelectedComponent(Component component) {
-		System.out.println("Before size: " + getSize().width + " " + getSize().height);
-		setSize(new Dimension(2*getSize().width, getSize().height));
-		System.out.println("After size: " + getSize().width + " " + getSize().height);
+		// System.out.println("Before size: " + getSize().width + " " +
+		// getSize().height);
+		setSize(new Dimension(2 * getSize().width, getSize().height));
+		// System.out.println("After size: " + getSize().width + " " +
+		// getSize().height);
 		mySplitPane.setRightComponent(component);
 		mySplitPane.setDividerLocation(0.4);
 		this.revalidate();
 		this.repaint();
-//		addView(component);
-//		myTabbedPane.setSelectedIndex(myTabbedPane.getTabCount() - 1);
+		// addView(component);
+		// myTabbedPane.setSelectedIndex(myTabbedPane.getTabCount() - 1);
 	}
-	
+
 	private void distributeTabChangedEvent() {
 		TabChangeListener[] listeners = myListeners.toArray(new TabChangeListener[0]);
-		
+
 		for (TabChangeListener l : listeners) {
-			l.tabChanged(new TabChangedEvent(myTabbedPane
-					.getSelectedComponent(), myTabbedPane.getTabCount()));
+			l.tabChanged(new TabChangedEvent(myTabbedPane.getSelectedComponent(), myTabbedPane.getTabCount()));
 		}
 	}
 
@@ -291,36 +270,25 @@ public class JFLAPEnvironment extends JFrame implements
 
 	public void closeTab(int i) {
 		Component c = myTabbedPane.getComponent(i);
-		if (c instanceof PumpingLemmaInputView) {
-			int result = showConfirmDialog("Save changes before closing?");
-			if (result == JOptionPane.CLOSED_OPTION
-					|| result == JOptionPane.CANCEL_OPTION) {
-				return;
-			}
-			if (result == JOptionPane.YES_OPTION) {
-				if (!this.save(false))
-					return;
-			}
-		}
 
-		if (myPrimaryView instanceof BlockTMView && i != 0){
-			if(c instanceof TuringMachineView){
+		if (myPrimaryView instanceof BlockTMView && i != 0) {
+			if (c instanceof TuringMachineView) {
 				TuringMachineView view = (TuringMachineView) c;
 				BlockEditorPanel panel = ((BlockTMView) myPrimaryView).getCentralPanel();
 				TransitionGraph graph = ((AutomatonEditorPanel) view.getCentralPanel()).getGraph();
-				
+
 				panel.setGraph((TuringMachine) view.getDefinition(), graph);
 			}
 		}
 		if (c instanceof EditingPanel)
 			amDirty = true;
-		
+
 		myTabbedPane.remove(i);
-		
+
 		distributeTabChangedEvent();
-		
+
 		myTabbedPane.revalidate();
-		
+
 		myTabbedPane.setSelectedIndex(myTabbedPane.getTabCount() - 1);
 		this.repaint();
 	}
@@ -340,9 +308,9 @@ public class JFLAPEnvironment extends JFrame implements
 	@Override
 	public String getName() {
 		String file = "";
-		if (myFile != null){
+		if (myFile != null) {
 			String name = myFile.getName();
-			if(name.endsWith(JFLAPConstants.JFF_SUFFIX))
+			if (name.endsWith(JFLAPConstants.JFF_SUFFIX))
 				name = name.substring(0, name.length() - JFLAPConstants.JFF_SUFFIX.length());
 			file = " (" + name + ")";
 		}
@@ -360,13 +328,13 @@ public class JFLAPEnvironment extends JFrame implements
 		@Override
 		public void setSelectedIndex(int index) {
 			super.setSelectedIndex(index);
-			if(index>=0){
-			Dimension newSize = this.getComponentAt(index).getPreferredSize();
+			if (index >= 0) {
+				Dimension newSize = this.getComponentAt(index).getPreferredSize();
 
-			JFLAPEnvironment.this.setPreferredSize(newSize);
-			JFLAPEnvironment.this.setSize(newSize);
-			JFLAPEnvironment.this.update();
-			distributeTabChangedEvent();
+				JFLAPEnvironment.this.setPreferredSize(newSize);
+				JFLAPEnvironment.this.setSize(newSize);
+				JFLAPEnvironment.this.update();
+				distributeTabChangedEvent();
 			}
 		}
 	}
@@ -383,54 +351,25 @@ public class JFLAPEnvironment extends JFrame implements
 		if (!hasFile())
 			return "";
 		String name = myFile.getName();
-		if(name.endsWith(JFLAPConstants.JFF_SUFFIX))
+		if (name.endsWith(JFLAPConstants.JFF_SUFFIX))
 			name = name.substring(0, name.length() - JFLAPConstants.JFF_SUFFIX.length());
 		return name;
 	}
 
 	public Component getCurrentView() {
-		//return myTabbedPane.getSelectedComponent();
+		// return myTabbedPane.getSelectedComponent();
 		return mySplitPane.getRightComponent();
 	}
 
 	@Override
 	public String toString() {
-		if(this.getFileName().isEmpty())
-			return "Environment: "+this.getID(); 
+		if (this.getFileName().isEmpty())
+			return "Environment: " + this.getID();
 		return "Environment: " + this.getFileName();
 	}
 
-	private void addPLChooser() {
-		PumpingLemmaChooser plc;
-		PumpingLemmaChooserView pane;
-
-		if (myPrimaryView instanceof CompCFPumpingLemmaInputView
-				|| myPrimaryView instanceof HumanCFPumpingLemmaInputView) {
-			plc = new CFPumpingLemmaChooser();
-			pane = new PumpingLemmaChooserView((CFPumpingLemmaChooser) plc);
-		} else {
-			plc = new RegPumpingLemmaChooser();
-			pane = new PumpingLemmaChooserView((RegPumpingLemmaChooser) plc);
-		}
-
-		// As PumpingLemmaChooserView instatiates as Human First by default:
-		if (myPrimaryView instanceof ComputerFirstView)
-			pane.setComputerFirst();
-
-		// Place the PLCV under the active tab
-		myTabbedPane.removeAll();
-		myTabbedPane.add(pane, 0);
-		myTabbedPane.add(myPrimaryView, 1);
-		myTabbedPane.setSelectedIndex(1);
-		myPrimaryView = pane; // To follow the hierarchy as before, with the
-								// chooser as the "Primary View"
-
-		myTabbedPane.revalidate();
-	}
-	
-	public Object showConfirmDialog(Object message, Object[] options, Object initialValue){
-		JOptionPane pane = new JOptionPane(message,
-				JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION,
+	public Object showConfirmDialog(Object message, Object[] options, Object initialValue) {
+		JOptionPane pane = new JOptionPane(message, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION,
 				null, options, initialValue);
 
 		JDialog dialog = pane.createDialog(this, "Select an Option");
@@ -438,25 +377,20 @@ public class JFLAPEnvironment extends JFrame implements
 
 		int forward = KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS;
 		int backward = KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS;
-		KeyboardFocusManager.getCurrentKeyboardFocusManager()
-				.addKeyEventDispatcher(mnem);
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(mnem);
 
-		Set<AWTKeyStroke> forwardTraversalKeys = new HashSet<AWTKeyStroke>(
-				dialog.getFocusTraversalKeys(forward)), backwardTraversalKeys = new HashSet<AWTKeyStroke>(
-				dialog.getFocusTraversalKeys(backward));
+		Set<AWTKeyStroke> forwardTraversalKeys = new HashSet<AWTKeyStroke>(dialog.getFocusTraversalKeys(forward)),
+				backwardTraversalKeys = new HashSet<AWTKeyStroke>(dialog.getFocusTraversalKeys(backward));
 
-		forwardTraversalKeys.add(AWTKeyStroke.getAWTKeyStroke(
-				KeyEvent.VK_RIGHT, KeyEvent.VK_UNDEFINED));
-		backwardTraversalKeys.add(AWTKeyStroke.getAWTKeyStroke(
-				KeyEvent.VK_LEFT, KeyEvent.VK_UNDEFINED));
+		forwardTraversalKeys.add(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.VK_UNDEFINED));
+		backwardTraversalKeys.add(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_LEFT, KeyEvent.VK_UNDEFINED));
 
 		dialog.setFocusTraversalKeys(forward, forwardTraversalKeys);
 		dialog.setFocusTraversalKeys(backward, backwardTraversalKeys);
 		dialog.setVisible(true);
 		dialog.dispose();
 
-		KeyboardFocusManager.getCurrentKeyboardFocusManager()
-				.removeKeyEventDispatcher(mnem);
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(mnem);
 		return pane.getValue();
 	}
 
@@ -472,7 +406,7 @@ public class JFLAPEnvironment extends JFrame implements
 	 */
 	public int showConfirmDialog(Object message) {
 		Object conf = showConfirmDialog(message, null, null);
-		if(conf instanceof Integer)
+		if (conf instanceof Integer)
 			return ((Integer) conf).intValue();
 		return -1;
 	}
@@ -512,13 +446,7 @@ public class JFLAPEnvironment extends JFrame implements
 	public void preferenceChanged(String pref, Object val) {
 		Component current = getCurrentView();
 
-		if (current instanceof LSystemRenderView && isRenderChange(pref))
-			((LSystemRenderView) current).updateDisplay();
-		else if (pref.equals(PREF_CHANGE.CYK_direction_change.toString())
-				&& current instanceof CYKParseView) {
-			((CYKParseView) current).getRunningView().changeDiagonal(
-					(Boolean) val);
-		} else if (current instanceof AutomatonView) {
+		if (current instanceof AutomatonView) {
 			if (pref.equals(PREF_CHANGE.lambda_change.toString()))
 				distributeTabChangedEvent();
 
@@ -528,10 +456,9 @@ public class JFLAPEnvironment extends JFrame implements
 	}
 
 	public boolean isRenderChange(String pref) {
-		PREF_CHANGE[] renderNeeded = new PREF_CHANGE[] {
-				PREF_CHANGE.lambda_change, PREF_CHANGE.LSangle_change,
-				PREF_CHANGE.LSdistance_change, PREF_CHANGE.LShue_change,
-				PREF_CHANGE.LSincrement_change, PREF_CHANGE.LSwidth_change };
+		PREF_CHANGE[] renderNeeded = new PREF_CHANGE[] { PREF_CHANGE.lambda_change, PREF_CHANGE.LSangle_change,
+				PREF_CHANGE.LSdistance_change, PREF_CHANGE.LShue_change, PREF_CHANGE.LSincrement_change,
+				PREF_CHANGE.LSwidth_change };
 		for (PREF_CHANGE c : renderNeeded)
 			if (c.toString().equals(pref))
 				return true;

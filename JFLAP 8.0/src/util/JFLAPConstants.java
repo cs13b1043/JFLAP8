@@ -27,7 +27,7 @@ public interface JFLAPConstants {
 						PLUS = "+", BAR = "|",
 						UNION = "\u222A", LOGICAL_OR = "\u2228";
 	public static final Icon PRODUCTION_ARROW = new ArrowIcon(20, 8);
-	public static final String VERSION = "8.0 (Beta)";
+	public static final String VERSION = "";
 	public static final Border DEF_PANEL_BORDER = BorderFactory
 			.createLineBorder(Color.BLACK, 3);
 	public static final Color DEFAULT_SWING_BG = UIManager
@@ -37,7 +37,7 @@ public interface JFLAPConstants {
 
 	// STATE CONSTANTS//
 	/** The default radius of a state. */
-	public static final int STATE_RADIUS = 20;
+	public static final int STATE_RADIUS = 25;
 
 	// TRANSITION CONSTANTS//
 	/** The angle for the arrow heads. */
@@ -52,7 +52,7 @@ public interface JFLAPConstants {
 	/**
 	 * Default font size of a grammar
 	 */
-	public static Font DEFAULT_FONT = new Font("TimesRoman", Font.PLAIN, 20);
+	public static Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 18);
 	/** The base color for states. */
 	public static final Color DEFAULT_STATE_COLOR = new Color(255, 255, 150);
 	public static final Color DEFAULT_SELECTED_COLOR = new Color(100, 200, 200);
@@ -80,7 +80,7 @@ public interface JFLAPConstants {
 
 	public static final String RESOURCE_ROOT = System.getProperty("user.dir")
 			+ "/src/resources";
-	public static final String VERSION_STRING = "JFLAP v"
+	public static final String VERSION_STRING = "SWE Project"
 			+ JFLAPConstants.VERSION;
 
 	public static final double DEFAULT_LS_ANGLE = 15.0, DEFAULT_LS_DISTANCE = 15.0, DEFAULT_LS_HUE = 10.0, DEFAULT_LS_INCREM = 1.0, DEFAULT_LS_WIDTH = 1.0;

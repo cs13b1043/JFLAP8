@@ -2,6 +2,9 @@ package view.automata.tools;
 
 import java.awt.event.MouseEvent;
 
+import javax.swing.UIManager;
+import javax.swing.plaf.ColorUIResource;
+
 import model.automata.Automaton;
 import model.automata.Transition;
 import model.undo.UndoKeeper;
@@ -16,12 +19,14 @@ import view.automata.editing.AutomatonEditorPanel;
 public abstract class EditingTool<T extends Automaton<S>, S extends Transition<S>>
 		extends Tool {
 
+	
 	private AutomatonEditorPanel<T, S> myPanel;
 	private UndoKeeper myKeeper;
 
 	public EditingTool(AutomatonEditorPanel<T, S> panel) {
 		this.myPanel = panel;
 		myKeeper = panel.getKeeper();
+		UIManager.put("ToolTip.background", new ColorUIResource(255, 250, 205));
 	}
 
 	public AutomatonEditorPanel<T, S> getPanel() {

@@ -14,7 +14,7 @@ import view.automata.editing.AutomatonEditorPanel;
 import view.automata.views.AutomatonView;
 import view.automata.views.FSAView;
 
-public class InvertAutomataAction extends AutomatonAction{
+public class InvertAutomataAction extends AutomatonAction {
 
 	public InvertAutomataAction(FSAView view) {
 		super("Invert Automata", view);
@@ -22,9 +22,9 @@ public class InvertAutomataAction extends AutomatonAction{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		InvertAutomataConverter convert = new InvertAutomataConverter((FiniteStateAcceptor) getAutomaton());
+		InvertAutomataConverter convert = new InvertAutomataConverter(((FiniteStateAcceptor) getAutomaton()).copy());
 		InvertedAutomatonPanel panel = new InvertedAutomatonPanel(getEditorPanel(), convert);
-		
+
 		JFLAPUniverse.getActiveEnvironment().addSelectedComponent(panel);
 	}
 

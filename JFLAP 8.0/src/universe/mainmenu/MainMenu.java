@@ -45,7 +45,7 @@ public class MainMenu extends JFrame {
 	 */
 	public MainMenu() {
 		// super((java.awt.Frame)null, "New Document");
-		super("JFLAP " + JFLAPConstants.VERSION);
+		super("SWE Project " + JFLAPConstants.VERSION);
 		getContentPane().setLayout(new GridLayout(0, 1));
 		initMenu();
 		initComponents();

@@ -61,7 +61,7 @@ public class RegexPanel extends EditingPanel {
 		add(regexPanel, BorderLayout.CENTER);
 		
 		JToolBar bar = new JToolBar();
-		JButton convertREtoNFA = new JButton("Convert NFA");
+		/*JButton convertREtoNFA = new JButton("Convert NFA");
 		convertREtoNFA.addActionListener(new ActionListener() {
 			
 			@Override
@@ -71,7 +71,7 @@ public class RegexPanel extends EditingPanel {
 		});
 		convertREtoNFA.setToolTipText("Convert RE to NFA");
 		bar.add(convertREtoNFA);
-		
+		*/
 		add(bar, BorderLayout.SOUTH);
 		initListener();
 	}

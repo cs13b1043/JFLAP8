@@ -29,7 +29,10 @@ public class StateTool<T extends Automaton<S>, S extends Transition<S>> extends
 
 	@Override
 	public String getToolTip() {
-		return "State Creator - KeyboardShortcut(S) - Click on the canvas to create states which you can relabel using attribute editor.";
+		return "<html>State Creator<br>"
+				+ "KeyboardShortcut(S)<br>"
+				+ "Click on the canvas to create states <br>"
+				+ "which you can relabel using attribute editor.</html>";
 	}
 
 	@Override

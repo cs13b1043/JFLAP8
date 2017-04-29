@@ -37,7 +37,10 @@ public class TransitionTool<T extends Automaton<S>, S extends Transition<S>> ext
 
 	@Override
 	public String getToolTip() {
-		return "Transition Creator- KeyboardShortcut(T)- Drag from one state to another to create a transition and then give a label to the transition ";
+		return "<html>Transition Creator "
+				+ "<br>KeyboardShortcut(T) "
+				+ "<br>Drag from one state to another to create a transition "
+				+ "<br> and then give a label to the transition </html>";
 
 	}
 
@@ -48,7 +51,7 @@ public class TransitionTool<T extends Automaton<S>, S extends Transition<S>> ext
 
 	@Override
 	public String getImageURLString() {
-		return "/ICON/transition.gif";
+		return "/ICON/transition.png";
 	}
 
 	@Override
