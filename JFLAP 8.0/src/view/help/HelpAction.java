@@ -48,22 +48,28 @@ import java.util.WeakHashMap;
 public class HelpAction extends AbstractAction {
 	
 	
-	private Object myTarget;
+	//private Object myTarget;
 
 	public HelpAction(){
-		this(null);
+		//this(null);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
 	/**
 	 * Instantiates a new <CODE>HelpAction</CODE>.
 	 */
-	public HelpAction(Object target) {
-		super("Help...", null);
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_SLASH,
-				JFLAPConstants.MAIN_MENU_MASK));
-		myTarget = target;
-	}
+	//public HelpAction(Object target) {
+		//super("Help...", null);
+		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_SLASH,
+		//		JFLAPConstants.MAIN_MENU_MASK));
+		//myTarget = target;
+	//}
 	
 	/**
 	 * Displays help for this object. If there is no particular help for this
@@ -75,14 +81,14 @@ public class HelpAction extends AbstractAction {
 	 * @see #getURL(Object)
 	 * @see oldview.help.WebFrame
 	 */
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		String url = HelpPageRegistry.getPageURL(myTarget);
-		FRAME.gotoURL(url);
-		FRAME.setVisible(true);
-	}
+	//@Override
+	//public void actionPerformed(ActionEvent e) {
+		//String url = HelpPageRegistry.getPageURL(myTarget);
+		//FRAME.gotoURL(url);
+		//FRAME.setVisible(true);
+	//}
 	
 	/** The web frame. */
-	private static final WebFrame FRAME = new WebFrame("/DOCS/index.html");
+	//private static final WebFrame FRAME = new WebFrame("/DOCS/index.html");
 
 }

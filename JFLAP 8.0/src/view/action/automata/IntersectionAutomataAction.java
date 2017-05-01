@@ -93,7 +93,6 @@ public class IntersectionAutomataAction extends AutomatonAction {
 		Automaton oAuto = oGraph.getAutomaton();
 
 		Map<State, State> stateMapping = new TreeMap<State, State>();
-
 		addStates(panel, oGraph, stateMapping);
 
 		JFLAPUniverse.registerEnvironment(view);
@@ -235,7 +234,6 @@ public class IntersectionAutomataAction extends AutomatonAction {
 									// qab is final
 									((Acceptor) auto).getFinalStateSet().add(newState2);
 								}
-
 							}
 						}
 					}

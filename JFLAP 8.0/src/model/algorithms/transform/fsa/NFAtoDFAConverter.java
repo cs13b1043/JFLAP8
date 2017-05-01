@@ -199,8 +199,8 @@ public class NFAtoDFAConverter extends FormalDefinitionAlgorithm<FiniteStateAcce
 
 
 	private String createName(State...states) {
-		String name = UtilFunctions.toDelimitedString(states, ",");
-		name =  "{" + name + "}";
+		String name = UtilFunctions.toDelimitedString(states, "");
+		//name =  "{" + name + "}";
 		return name;
 	}
 	

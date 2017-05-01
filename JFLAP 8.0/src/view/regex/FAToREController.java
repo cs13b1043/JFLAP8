@@ -63,8 +63,7 @@ public class FAToREController {
 	 */
 	public void outOfOrder() {
 		JOptionPane.showMessageDialog(JFLAPUniverse.getActiveEnvironment(),
-				"That action is inappropriate for this step!", "Out of Order",
-				JOptionPane.ERROR_MESSAGE);
+				"That action is inappropriate for this step!", "Out of Order", JOptionPane.ERROR_MESSAGE);
 	}
 
 	/**
@@ -74,29 +73,23 @@ public class FAToREController {
 	private void nextStep() {
 		if (myAlg.needsFinalTransitions()) {
 			myPanel.setMainText("Reform Transitions");
-			myPanel.setDetailText("Put " + JFLAPPreferences.getEmptyString()
-					+ "-transitions from old final states to new.");
+			myPanel.setDetailText(
+					"Put " + JFLAPPreferences.getEmptyString() + "-transitions from old final states to new.");
 		} else if (!myAlg.hasSingleFinal()) {
 			myPanel.setMainText("Make Single Noninitial Final State");
 			myPanel.setDetailText("Create a new state to make a single final state.");
 		} else if (myAlg.needsTranstitionsCollapsed()) {
 			myPanel.setMainText("Reform Transitions");
-			myPanel.setDetailText("Use the collapse tool to turn multiple transitions to one."
-					+ " "
-					+ myAlg.numTransCollapsesNeeded()
-					+ " more collapses needed.");
+			myPanel.setDetailText("Use the collapse tool to turn multiple transitions to one." + " "
+					+ myAlg.numTransCollapsesNeeded() + " more collapses needed.");
 		} else if (myAlg.needsEmptyTransitions()) {
 			myPanel.setMainText("Reform Transitions");
-			myPanel.setDetailText("Put empty transitions between states with no transitions."
-					+ " "
-					+ myAlg.numEmptyNeeded()
-					+ " more empty transitions needed.");
+			myPanel.setDetailText("Put empty transitions between states with no transitions." + " "
+					+ myAlg.numEmptyNeeded() + " more empty transitions needed.");
 		} else if (myAlg.needsStatesCollaped()) {
 			myPanel.setMainText("Remove States");
-			myPanel.setDetailText("Use the collapse state tool to remove nonfinal, noninitial "
-					+ "states. "
-					+ myAlg.numStateCollapsesNeeded()
-					+ " more removals needed.");
+			myPanel.setDetailText("Use the collapse state tool to remove nonfinal, noninitial " + "states. "
+					+ myAlg.numStateCollapsesNeeded() + " more removals needed.");
 
 			if (transitionWindow != null) {
 				transitionWindow.setVisible(false);
@@ -105,8 +98,7 @@ public class FAToREController {
 			myPanel.clearSelection();
 		} else if (!myAlg.isRunning()) {
 			myPanel.setMainText("Generalized Transition Graph Finished!");
-			myPanel.setDetailText(myAlg.getResultingRegEx()
-					.getExpressionString());
+			myPanel.setDetailText("Regular Expression: " + myAlg.getResultingRegEx().getExpressionString());
 		}
 
 	}
@@ -170,14 +162,11 @@ public class FAToREController {
 
 		if (myAlg.needsFinalTransitions()) {
 			if (myAlg.getSingleFinal() != to) {
-				JOptionPane.showMessageDialog(env,
-						"Transitions must go to the new final state!",
-						"Bad Destination", JOptionPane.ERROR_MESSAGE);
-			} else if (!automaton.getFinalStateSet().contains(from)
-					|| from.equals(myAlg.getSingleFinal())) {
-				JOptionPane.showMessageDialog(env,
-						"Transitions must come from an old final state!",
-						"Bad Source", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(env, "Transitions must go to the new final state!", "Bad Destination",
+						JOptionPane.ERROR_MESSAGE);
+			} else if (!automaton.getFinalStateSet().contains(from) || from.equals(myAlg.getSingleFinal())) {
+				JOptionPane.showMessageDialog(env, "Transitions must come from an old final state!", "Bad Source",
+						JOptionPane.ERROR_MESSAGE);
 			} else {
 				myPanel.deselect(from);
 				myAlg.addTransitionToFinal(from, to);
@@ -187,9 +176,7 @@ public class FAToREController {
 			}
 		} else if (myAlg.hasSingleFinal() && !myAlg.needsTranstitionsCollapsed() && myAlg.needsEmptyTransitions()) {
 			if (!transitions.getTransitionsFromStateToState(from, to).isEmpty()) {
-				JOptionPane.showMessageDialog(env,
-						"Transitions must go between "
-								+ "states with no transitions!",
+				JOptionPane.showMessageDialog(env, "Transitions must go between " + "states with no transitions!",
 						"Transition Already Exists", JOptionPane.ERROR_MESSAGE);
 			}
 			myAlg.addEmptyTransition(from, to);
@@ -205,16 +192,13 @@ public class FAToREController {
 	public void transitionCollapse(FSATransition trans) {
 		if (myAlg.hasSingleFinal() && myAlg.needsTranstitionsCollapsed()) {
 			FiniteStateAcceptor automaton = myAlg.getGTG();
-			TransitionSet<FSATransition> transitions = automaton
-					.getTransitions();
+			TransitionSet<FSATransition> transitions = automaton.getTransitions();
 			State from = trans.getFromState(), to = trans.getToState();
 
-			Set<FSATransition> ts = transitions.getTransitionsFromStateToState(
-					from, to);
+			Set<FSATransition> ts = transitions.getTransitionsFromStateToState(from, to);
 			FSATransition first = ts.toArray(new FSATransition[0])[0];
 			if (!myAlg.collapseTransitionsOn(first)) {
-				JOptionPane.showMessageDialog(myPanel,
-						"Collapse requires 2 or more transitions!",
+				JOptionPane.showMessageDialog(myPanel, "Collapse requires 2 or more transitions!",
 						"Too Few Transitions", JOptionPane.ERROR_MESSAGE);
 			} else
 				nextStep();
@@ -235,26 +219,21 @@ public class FAToREController {
 	 */
 	public boolean stateCollapse(State state) {
 		FiniteStateAcceptor automaton = myAlg.getGTG();
-		if (!myAlg.isRunning() || !myAlg.hasSingleFinal()
-				|| myAlg.needsEmptyTransitions()
-				|| myAlg.needsTranstitionsCollapsed()
-				|| myAlg.needsFinalTransitions()) {
+		if (!myAlg.isRunning() || !myAlg.hasSingleFinal() || myAlg.needsEmptyTransitions()
+				|| myAlg.needsTranstitionsCollapsed() || myAlg.needsFinalTransitions()) {
 			outOfOrder();
 			return false;
 		} else if (automaton.getStartState().equals(state)) {
-			JOptionPane.showMessageDialog(myPanel,
-					"The initial state cannot be removed!",
-					"Initial State Selected", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(myPanel, "The initial state cannot be removed!", "Initial State Selected",
+					JOptionPane.ERROR_MESSAGE);
 			return false;
 		} else if (automaton.getFinalStateSet().contains(state)) {
-			JOptionPane.showMessageDialog(myPanel,
-					"The final state cannot be removed!",
-					"Final State Selected", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(myPanel, "The final state cannot be removed!", "Final State Selected",
+					JOptionPane.ERROR_MESSAGE);
 			return false;
 		} else {
 			transitionWindow = new TransitionWindow(state, this);
-			transitionWindow.setTransitions(myAlg
-					.getTransitionsForCollapseState(state));
+			transitionWindow.setTransitions(myAlg.getTransitionsForCollapseState(state));
 			transitionWindow.setVisible(true);
 
 			return true;
@@ -267,9 +246,8 @@ public class FAToREController {
 	 */
 	public void finalizeStateRemove(State collapseState) {
 		if (collapseState == null) {
-			JOptionPane.showMessageDialog(myPanel,
-					"A valid state has not been selected yet!",
-					"No State Selected", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(myPanel, "A valid state has not been selected yet!", "No State Selected",
+					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		myAlg.collapseState(collapseState);
@@ -288,8 +266,7 @@ public class FAToREController {
 	 *            the transition that was selected, or <CODE>null</CODE> if less
 	 *            or more than one transition is selected
 	 */
-	public void tableTransitionSelected(State collapseState,
-			FSATransition transition) {
+	public void tableTransitionSelected(State collapseState, FSATransition transition) {
 		myPanel.clearSelection();
 		if (transition != null && collapseState != null) {
 			State from = transition.getFromState();
@@ -313,15 +290,13 @@ public class FAToREController {
 	public void step() {
 		JFLAPEnvironment env = JFLAPUniverse.getActiveEnvironment();
 		if (!(myAlg.hasSingleFinal() || myAlg.getSingleFinal() != null)) {
-			JOptionPane.showMessageDialog(env,
-					"Just create a state.\nI believe in you.",
-					"Create the State", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(env, "Just create a state.\nI believe in you.", "Create the State",
+					JOptionPane.ERROR_MESSAGE);
 		} else if (myAlg.canStep()) {
 			myAlg.step();
 			nextStep();
 		} else
-			JOptionPane.showMessageDialog(env, "You're done.  Go away.",
-					"You're Done!", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(env, "You're done.  Go away.", "You're Done!", JOptionPane.ERROR_MESSAGE);
 	}
 
 	/**

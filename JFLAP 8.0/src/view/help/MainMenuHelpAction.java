@@ -56,7 +56,7 @@ public class MainMenuHelpAction extends HelpAction {
 		//displayHelp(NewAction.class);
 		
 		//Temporary command
-		JOptionPane.showMessageDialog(null, "For help, feel free to access the JFLAP tutorial at\n" +
-				"                          www.jflap.org.", "Help", JOptionPane.PLAIN_MESSAGE);
+		//JOptionPane.showMessageDialog(null, "For help, feel free to access the JFLAP tutorial at\n" +
+			//	"                          www.jflap.org.", "Help", JOptionPane.PLAIN_MESSAGE);
 	}
 }

@@ -18,8 +18,8 @@ public class HelpMenu extends JMenu {
 
 	public HelpMenu(){
 		super("Help");
-		this.add(new HelpAction());
-		this.add(new AboutAction());
+		//this.add(new HelpAction());
+		//this.add(new AboutAction());
 		this.add(new PreferenceAction());
 		
 	}

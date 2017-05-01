@@ -33,12 +33,12 @@ import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.table.TableColumnModel;
 
+import file.XMLFileChooser;
 import model.algorithms.testinput.simulate.Configuration;
 import model.algorithms.testinput.simulate.ConfigurationChain;
 import model.algorithms.testinput.simulate.SingleInputSimulator;
@@ -61,7 +61,6 @@ import view.automata.simulate.TraceWindow;
 import view.automata.views.AutomatonView;
 import view.environment.JFLAPEnvironment;
 import view.grammar.productions.LambdaRemovingEditor;
-import file.XMLFileChooser;
 
 /**
  * This is the action used for the simulation of multiple inputs on an automaton
@@ -188,9 +187,10 @@ public class MultipleSimulateAction extends FastSimulateAction {
 			}
 
 		});
-		MultiplePane mp = new MultiplePane(getEditorPanel(), panel);
+		//MultiplePane mp = new MultiplePane(getEditorPanel(), panel);
+		
 
-		JFLAPUniverse.getActiveEnvironment().addSelectedComponent(mp);
+		JFLAPUniverse.getActiveEnvironment().addSelectedComponent(panel);
 	}
 
 	private void load() {
@@ -358,26 +358,27 @@ public class MultipleSimulateAction extends FastSimulateAction {
 		}
 	}
 
-	private class MultiplePane extends AutomatonDisplayPanel {
-		private JSplitPane split;
-
-		public MultiplePane(AutomatonEditorPanel editor, JPanel info) {
-			super(editor, editor.getAutomaton(), "Multiple Run");
-			updateSize();
-
-			Dimension size = getPreferredSize(), infoSize = info
-					.getMinimumSize();
-			split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-					getEditorPanel(), info);
-			setPreferredSize(new Dimension(size.width + infoSize.width,
-					size.height));
-			double ratio = ((double) (size.width))
-					/ (size.width + infoSize.width);
-
-			split.setResizeWeight(ratio);
-
-			add(split, BorderLayout.CENTER);
-		}
-	}
+//	private class MultiplePane extends AutomatonDisplayPanel {
+//		private JPanel split;
+//
+//		public MultiplePane(AutomatonEditorPanel editor, JPanel info) {
+//			super(editor, editor.getAutomaton(), "Multiple Run");
+//			updateSize();
+//
+//			Dimension size = getPreferredSize(), infoSize = info
+//					.getMinimumSize();
+//			//split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+//				//	getEditorPanel(), info);
+//			split = JPanel(info);
+//			setPreferredSize(new Dimension(size.width + infoSize.width,
+//					size.height));
+//			double ratio = ((double) (size.width))
+//					/ (size.width + infoSize.width);
+//
+//			split.setResizeWeight(ratio);
+//
+//			add(split, BorderLayout.CENTER);
+//		}
+//	}
 
 }

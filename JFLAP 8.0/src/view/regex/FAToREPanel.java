@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
 
 import model.algorithms.conversion.fatoregex.DFAtoRegularExpressionConverter;
 import model.automata.State;
@@ -51,13 +52,16 @@ public class FAToREPanel extends AutomatonDisplayPanel<FiniteStateAcceptor, FSAT
 
 		labels.add(myMainLabel, BorderLayout.NORTH);
 		labels.add(myDetailLabel, BorderLayout.SOUTH);
-		add(labels, BorderLayout.NORTH);
+		add(labels, BorderLayout.SOUTH);
 
 		ToolBar tools = createToolBar();
+		JToolBar viewToolbar = createViewToolbar();
+
 		JScrollPane scroll = new JScrollPane(getEditorPanel());
 		scroll.revalidate();
 		JPanel center = new JPanel(new BorderLayout());
 
+		add(viewToolbar, BorderLayout.NORTH);
 		center.add(tools, BorderLayout.EAST);
 		center.add(scroll, BorderLayout.CENTER);
 		add(center, BorderLayout.CENTER);
@@ -68,6 +72,30 @@ public class FAToREPanel extends AutomatonDisplayPanel<FiniteStateAcceptor, FSAT
 		height += labels.getPreferredSize().height;
 
 		setPreferredSize(new Dimension(size.width, height));
+	}
+
+	private JToolBar createViewToolbar() {
+		AutomatonEditorPanel<FiniteStateAcceptor, FSATransition> panel = getEditorPanel();
+		JToolBar tools = new JToolBar();
+		JButton fitScreen = new JButton("Fit to screen");
+		// changeLayout.addActionListener(new NFAtoDFAAction((FSAView)this));
+		fitScreen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panel.fitToScreen();
+			}
+		});
+		fitScreen.setToolTipText("Fit to Screen");
+		tools.add(fitScreen);
+
+		JButton changeLayout = new JButton("LayoutGraph");
+		changeLayout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panel.layoutGraph();
+			}
+		});
+		changeLayout.setToolTipText("Change the layout of the graph");
+		tools.add(changeLayout);
+		return tools;
 	}
 
 	private ToolBar createToolBar() {
@@ -125,28 +153,6 @@ public class FAToREPanel extends AutomatonDisplayPanel<FiniteStateAcceptor, FSAT
 			}
 		}));
 
-		
-		JButton changeLayout = new JButton("LayoutGraph");
-		// changeLayout.addActionListener(new NFAtoDFAAction((FSAView)this));
-		changeLayout.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// AutomatonEditorPanel<T, S> panel = (AutomatonEditorPanel<T,
-				// S>) getCentralPanel();
-				panel.layoutGraph();
-			}
-		});
-		changeLayout.setToolTipText("Change the layout of the graph");
-		tools.add(changeLayout);
-		
-		JButton fitScreen = new JButton("Fit to screen");
-		// changeLayout.addActionListener(new NFAtoDFAAction((FSAView)this));
-		fitScreen.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				panel.fitToScreen();
-			}
-		});
-		fitScreen.setToolTipText("Fit to Screen");
-		tools.add(fitScreen);
 		return tools;
 	}
 

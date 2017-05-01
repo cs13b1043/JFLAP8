@@ -56,9 +56,9 @@ public abstract class FormalDefinitionView<T, S extends FormalDefinition> extend
 
 	}
 
-	public JToolBar createConvertbar(S definition, UndoKeeper keeper) {
+	public JPanel createConvertbar(S definition, UndoKeeper keeper) {
 
-		return new JToolBar();
+		return new JPanel();
 	}
 
 	public JToolBar createViewbar(S definition, UndoKeeper keeper) {

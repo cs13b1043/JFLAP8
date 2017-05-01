@@ -51,8 +51,7 @@ public class UnionAutomataAction extends AutomatonAction {
 		AutomatonEditorPanel panel = getEditorPanel();
 		Automaton auto = panel.getAutomaton();
 
-		JFLAPEnvironment[] enviros = JFLAPUniverse.getRegistry().toArray(
-				new JFLAPEnvironment[0]);
+		JFLAPEnvironment[] enviros = JFLAPUniverse.getRegistry().toArray(new JFLAPEnvironment[0]);
 		JFLAPEnvironment active = JFLAPUniverse.getActiveEnvironment();
 		JComboBox<JFLAPEnvironment> combo = new JComboBox<JFLAPEnvironment>();
 
@@ -65,20 +64,16 @@ public class UnionAutomataAction extends AutomatonAction {
 		}
 
 		if (combo.getItemCount() == 0)
-			throw new AutomatonException(
-					"No other automata of this type around!");
+			throw new AutomatonException("No other automata of this type around!");
 
 		// Prompt the user.
-		int result = JOptionPane.showOptionDialog(active, combo, "Combine Two",
-				JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
-				null, null, null);
+		int result = JOptionPane.showOptionDialog(active, combo, "Combine Two", JOptionPane.OK_CANCEL_OPTION,
+				JOptionPane.QUESTION_MESSAGE, null, null, null);
 		if (result != JOptionPane.OK_OPTION)
 			return;
 
-		AutomatonView otherView = (AutomatonView) ((JFLAPEnvironment) combo
-				.getSelectedItem()).getPrimaryView();
-		AutomatonEditorData other = new AutomatonEditorData(
-				(AutomatonEditorPanel) otherView.getCentralPanel());
+		AutomatonView otherView = (AutomatonView) ((JFLAPEnvironment) combo.getSelectedItem()).getPrimaryView();
+		AutomatonEditorData other = new AutomatonEditorData((AutomatonEditorPanel) otherView.getCentralPanel());
 		AutomatonEditorData copy = new AutomatonEditorData(panel);
 
 		add(copy, other);
@@ -91,19 +86,18 @@ public class UnionAutomataAction extends AutomatonAction {
 	 */
 	private void add(AutomatonEditorData newOne, AutomatonEditorData other) {
 		AutomatonView view = ViewFactory.createAutomataView(newOne);
-		AutomatonEditorPanel panel = (AutomatonEditorPanel) view
-				.getCentralPanel();
+		AutomatonEditorPanel panel = (AutomatonEditorPanel) view.getCentralPanel();
 		Automaton auto = panel.getAutomaton();
 
 		TransitionGraph oGraph = other.getGraph();
 		Automaton oAuto = oGraph.getAutomaton();
 
 		Map<State, State> stateMapping = new TreeMap<State, State>();
-		
+
 		addStates(panel, oGraph, stateMapping);
 		addTransitions(panel, oGraph, stateMapping);
 		addNotes(other, panel, stateMapping);
-		
+
 		JFLAPUniverse.registerEnvironment(view);
 	}
 
@@ -111,8 +105,7 @@ public class UnionAutomataAction extends AutomatonAction {
 		Map<Point2D, String> oNotes = other.getNotes();
 
 		for (Point2D p : oNotes.keySet()) {
-			panel.addNote(new Note(panel, new Point((int) p.getX(), (int) p
-					.getY()), oNotes.get(p)));
+			panel.addNote(new Note(panel, new Point((int) p.getX(), (int) p.getY()), oNotes.get(p)));
 		}
 
 		Map<Point2D, String> oLabels = other.getLabels();
@@ -120,26 +113,26 @@ public class UnionAutomataAction extends AutomatonAction {
 		for (Point2D p : oLabels.keySet()) {
 			State s = (State) other.getGraph().vertexForPoint(p);
 
-			panel.addStateLabel(stateMapping.get(s), new Note(panel, new Point(
-					(int) p.getX(), (int) p.getY())), oLabels.get(p));
+			panel.addStateLabel(stateMapping.get(s), new Note(panel, new Point((int) p.getX(), (int) p.getY())),
+					oLabels.get(p));
 		}
 	}
 
 	public void addTransitions(AutomatonEditorPanel panel, TransitionGraph oGraph, Map<State, State> stateMapping) {
 		Automaton auto = panel.getAutomaton();
 		Automaton oAuto = oGraph.getAutomaton();
-		
-		TransitionSet<? extends Transition<?>> oTransitions = oAuto
-				.getTransitions();
+
+		TransitionSet<? extends Transition<?>> oTransitions = oAuto.getTransitions();
 
 		for (Transition t : oTransitions) {
 			State from = stateMapping.get(t.getFromState());
 			State to = stateMapping.get(t.getToState());
 			auto.getTransitions().add(t.copy(from, to));
 		}
-		
-		//For some reason, you can't adjust the control points until all transitions are added.
-		for (Transition t : oTransitions){
+
+		// For some reason, you can't adjust the control points until all
+		// transitions are added.
+		for (Transition t : oTransitions) {
 			State from = stateMapping.get(t.getFromState());
 			State to = stateMapping.get(t.getToState());
 			Point2D ctrl = oGraph.getControlPt(t);
@@ -147,27 +140,30 @@ public class UnionAutomataAction extends AutomatonAction {
 		}
 	}
 
-	public void addStates(AutomatonEditorPanel panel,
-			TransitionGraph oGraph,
-			Map<State, State> stateMapping) {
+	public void addStates(AutomatonEditorPanel panel, TransitionGraph oGraph, Map<State, State> stateMapping) {
 		Automaton auto = panel.getAutomaton();
 		Automaton oAuto = oGraph.getAutomaton();
-		
+
 		State oldStart1 = auto.getStartState();
 		State oldStart2 = null;
-		
+
+		// modify old states
+		for (State s : auto.getStates()) {
+			s.setName(s.getName()+"_0");
+		}
+
+		// add new states
 		for (State s : oAuto.getStates()) {
 			Point2D p = oGraph.pointForVertex(s);
-			State s2 = oAuto instanceof BlockTuringMachine ? ((BlockEditorPanel) panel)
-					.addBlock((Block) s, p) : panel.createState(p);
+			State s2 = oAuto instanceof BlockTuringMachine ? ((BlockEditorPanel) panel).addBlock((Block) s, p)
+					: panel.createState(p);
 
-			if (oAuto instanceof Acceptor
-					&& Acceptor.isFinalState((Acceptor) oAuto, s))
+			if (oAuto instanceof Acceptor && Acceptor.isFinalState((Acceptor) oAuto, s))
 				((Acceptor) auto).getFinalStateSet().add(s2);
 
-			if(Automaton.isStartState(oAuto, s))
+			if (Automaton.isStartState(oAuto, s))
 				oldStart2 = s2;
-			
+
 			if (oAuto instanceof BlockTuringMachine) {
 				BlockEditorPanel bPanel = (BlockEditorPanel) panel;
 				BlockTMGraph bGraph = (BlockTMGraph) oGraph;
@@ -177,22 +173,21 @@ public class UnionAutomataAction extends AutomatonAction {
 			if (oAuto instanceof MooreMachine) {
 				MooreEditorPanel mPanel = (MooreEditorPanel) panel;
 				MooreMachine n = (MooreMachine) oAuto;
-				SymbolString output = n.getOutputFunctionSet()
-						.getOutputForTransition(new FSATransition(s, s));
+				SymbolString output = n.getOutputFunctionSet().getOutputForTransition(new FSATransition(s, s));
 
 				mPanel.addOutputFunction(s2, output);
 			}
 
-			s2.setName(s.getName());
+			s2.setName(s.getName() + "_1");
 			stateMapping.put(s, s2);
 		}
-		
-		//create a new start state
-		State newStart = panel.createState(new Point(5,5));
+
+		// create a new start state
+		State newStart = panel.createState(new Point(5, 5));
 		newStart.setName("qn");
 		auto.setStartState(newStart);
-		
-		//transitions from newStart to oldStart1 and oldStart2
+
+		// transitions from newStart to oldStart1 and oldStart2
 		auto.getTransitions().add(panel.createTransition(newStart, oldStart1));
 		auto.getTransitions().add(panel.createTransition(newStart, oldStart2));
 	}
@@ -201,10 +196,8 @@ public class UnionAutomataAction extends AutomatonAction {
 		if (!(primary instanceof AutomatonView))
 			return false;
 		Automaton pAuto = ((AutomatonView) primary).getDefinition();
-		if (pAuto instanceof MultiTapeTuringMachine
-				&& auto instanceof MultiTapeTuringMachine)
-			return ((MultiTapeTuringMachine) pAuto).getNumTapes() == ((MultiTapeTuringMachine) auto)
-					.getNumTapes();
+		if (pAuto instanceof MultiTapeTuringMachine && auto instanceof MultiTapeTuringMachine)
+			return ((MultiTapeTuringMachine) pAuto).getNumTapes() == ((MultiTapeTuringMachine) auto).getNumTapes();
 		return pAuto.getClass().equals(auto.getClass());
 	}
 
