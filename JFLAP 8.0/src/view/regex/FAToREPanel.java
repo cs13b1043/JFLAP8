@@ -108,7 +108,7 @@ public class FAToREPanel extends AutomatonDisplayPanel<FiniteStateAcceptor, FSAT
 		TransitionCollapseTool tCollapse = new TransitionCollapseTool(panel, myController);
 		StateCollapseTool sCollapse = new StateCollapseTool(panel, myController);
 
-		ToolBar tools = new ToolBar(arrow, state, trans, tCollapse, sCollapse);
+		ToolBar tools = new ToolBar(arrow, state, trans /*,tCollapse, sCollapse*/);
 		tools.addToolListener(panel);
 		panel.setTool(arrow);
 

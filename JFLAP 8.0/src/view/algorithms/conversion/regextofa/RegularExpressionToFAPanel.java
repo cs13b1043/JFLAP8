@@ -109,7 +109,7 @@ public class RegularExpressionToFAPanel extends AutomatonDisplayPanel<FiniteStat
 		REtoFATransitionTool trans = new REtoFATransitionTool(panel, myAlg);
 		DeexpressionTransitionTool deex = new DeexpressionTransitionTool(this);
 		
-		ToolBar tools = new ToolBar(arrow, trans, deex);
+		ToolBar tools = new ToolBar(arrow, trans);
 		tools.addToolListener(panel);
 		panel.setTool(arrow);
 		
@@ -145,8 +145,7 @@ public class RegularExpressionToFAPanel extends AutomatonDisplayPanel<FiniteStat
 			}
 		});
 		
-		tools.add(new AbstractAction("Export") {
-			
+		tools.add(new AbstractAction("Export") {	
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				export();

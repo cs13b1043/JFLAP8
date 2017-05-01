@@ -30,6 +30,7 @@ import view.action.automata.InvertAutomataAction;
 import view.action.automata.MultipleSimulateAction;
 import view.action.automata.NFAtoDFAAction;
 import view.action.automata.SimulateAction;
+import view.action.automata.TrapStateAction;
 import view.action.automata.UnionAutomataAction;
 import view.automata.editing.AutomatonEditorPanel;
 import view.automata.tools.ArrowTool;
@@ -138,6 +139,11 @@ public class AutomatonView<T extends Automaton<S>, S extends Transition<S>> exte
 		stepByClosure.addActionListener((new SimulateAction(this, true)));
 		stepByClosure.setToolTipText("Step with closure");
 		bar1.add(stepByClosure);
+		
+		JButton trap = new JButton("Complete DFA");
+		trap.addActionListener(new TrapStateAction((FSAView)this));
+		trap.setToolTipText(" This action is used to add a trap state and complete a DFA.(all transitions from all states)");
+		bar1.add(trap);
 
 		// toolbar 2 - convert
 		JToolBar bar2 = new JToolBar();
@@ -153,17 +159,17 @@ public class AutomatonView<T extends Automaton<S>, S extends Transition<S>> exte
 
 		JButton invert = new JButton("Complement");
 		invert.addActionListener(new InvertAutomataAction((FSAView) this));
-		invert.setToolTipText("Complement of Finite Automaton");
+		invert.setToolTipText("Complement of Finite Automaton ");
 		bar2.add(invert);
 
 		JButton union = new JButton("Union");
 		union.addActionListener(new UnionAutomataAction((FSAView) this));
-		union.setToolTipText("Union of Finite Automata");
+		union.setToolTipText("Select the automaton present in the appropriate environment with which you want to perform the union. First, we get a NFA which has to be converted to DFA later.");
 		bar2.add(union);
 
 		JButton intersection = new JButton("Intersection");
 		intersection.addActionListener(new IntersectionAutomataAction((FSAView) this));
-		intersection.setToolTipText("Intersection of Finite Automata");
+		intersection.setToolTipText("Select the automaton present in the appropriate environment with which you want to perform the intersection.");
 		bar2.add(intersection);
 
 		bar1.setAlignmentX(LEFT_ALIGNMENT);

@@ -35,11 +35,11 @@ public class JFLAPMenuBar extends JMenuBar implements TabChangeListener {
 
 	public JFLAPMenuBar(JFLAPEnvironment e){
 		add(new FileMenu(e));
-		addMenu(createEditMenu(e));
-		addMenu(createInputMenu(e));
+		//addMenu(createEditMenu(e));
+		//addMenu(createInputMenu(e));
 		addMenu(createTestMenu(e));
 		addMenu(createViewMenu(e));
-		addMenu(createConvertMenu(e));
+		//addMenu(createConvertMenu(e));
 		this.add(new HelpMenu());
 		this.add(Box.createGlue());
 		this.add(myCloseButton = new CloseButton(e));

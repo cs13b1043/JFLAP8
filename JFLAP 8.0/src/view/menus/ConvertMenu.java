@@ -60,6 +60,7 @@ public class ConvertMenu extends JMenu implements TabChangeListener {
 		
 		if(view instanceof AutomatonView){
 			AutomatonView v = (AutomatonView) view;
+			/*
 			if(view instanceof FSAView){
 				this.add(new NFAtoDFAAction((FSAView) v));
 				this.add(new FSAtoRegGrammarAction((FSAView) v));
@@ -77,10 +78,11 @@ public class ConvertMenu extends JMenu implements TabChangeListener {
 					this.add(new StayOptionRemoveAction(mtv));
 			}
 			this.add(new CombineAutomataAction(v));
+			*/
 		}
 		
 		if(view instanceof RegexView){
-			this.add(new REtoFAAction((RegexView) view));
+			//this.add(new REtoFAAction((RegexView) view));
 		}
 	}
 }
