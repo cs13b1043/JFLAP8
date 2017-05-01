@@ -40,5 +40,6 @@ public class GroupingDeX extends DeExpressionifier {
 	protected boolean isApplicable(SymbolString first, SymbolString rest) {
 		return rest.isEmpty() && first.endsWith(myCloseGroup);
 	}
+	
 
 }
