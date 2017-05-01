@@ -54,7 +54,7 @@ public interface JFLAPConstants {
 	 */
 	public static Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 18);
 	/** The base color for states. */
-	public static final Color DEFAULT_STATE_COLOR = new Color(255, 255, 150);
+	public static final Color DEFAULT_STATE_COLOR = new Color(227,231,234);//255, 255, 150);
 	public static final Color DEFAULT_SELECTED_COLOR = new Color(100, 200, 200);
 	public static final Color DEFAULT_CYK_HIGHLIGHT_COLOR = new Color(255, 255, 66);
 	public static final Color DEFAULT_TRANS_COLOR = Color.BLACK;

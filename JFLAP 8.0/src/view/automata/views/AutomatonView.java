@@ -1,14 +1,14 @@
 package view.automata.views;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 
@@ -20,6 +20,7 @@ import view.action.automata.DFAtoREAction;
 import view.action.automata.FastSimulateAction;
 import view.action.automata.IntersectionAutomataAction;
 import view.action.automata.InvertAutomataAction;
+import view.action.automata.MultipleSimulateAction;
 import view.action.automata.NFAtoDFAAction;
 import view.action.automata.UnionAutomataAction;
 import view.automata.editing.AutomatonEditorPanel;
@@ -102,42 +103,53 @@ public class AutomatonView<T extends Automaton<S>, S extends Transition<S>> exte
 	}
 
 	@Override
-	public JToolBar createConvertbar(T definition, UndoKeeper keeper) {
+	public JPanel createConvertbar(T definition, UndoKeeper keeper) {
 		AutomatonEditorPanel<T, S> panel = (AutomatonEditorPanel<T, S>) getCentralPanel();
 
-		JToolBar bar = new JToolBar();
+		JPanel bar =new JPanel(new BorderLayout());
+		
+		JToolBar bar1 = new JToolBar();
 		JButton fastRun = new JButton("FastRun");
 		fastRun.addActionListener((new FastSimulateAction((FSAView) this)));
 		fastRun.setToolTipText("Run an input on the automaton");
-		bar.add(fastRun);
+		bar1.add(fastRun);
+		
+		JButton multipleRun = new JButton("MultipleRun");
+		multipleRun.addActionListener((new MultipleSimulateAction((FSAView) this)));
+		multipleRun.setToolTipText("Run multiple inputs on the automaton");
+		bar1.add(multipleRun);
 
+		JToolBar bar2 = new JToolBar();
 		JButton convertToRE = new JButton("ConvertToRE");
 		convertToRE.addActionListener(new DFAtoREAction((FSAView) this));
 		convertToRE.setToolTipText("Convert the DFA to RE");
-		bar.add(convertToRE);
+		bar2.add(convertToRE);
 
 		JButton convertToDFA = new JButton("ConvertToDFA");
 		convertToDFA.addActionListener(new NFAtoDFAAction((FSAView) this));
 		convertToDFA.setToolTipText("Convert the NFA to DFA");
-		bar.add(convertToDFA);
+		bar2.add(convertToDFA);
 		
 		JButton invert = new JButton("Complement");
 		invert.addActionListener(new InvertAutomataAction((FSAView) this));
 		invert.setToolTipText("Complement of Finite Automaton");
-		bar.add(invert);
+		bar2.add(invert);
 
 		JButton union = new JButton("Union");
 		union.addActionListener(new UnionAutomataAction((FSAView) this));
 		union.setToolTipText("Union of Finite Automata");
-		bar.add(union);
+		bar2.add(union);
 		
 		JButton intersection = new JButton("Intersection");
 		intersection.addActionListener(new IntersectionAutomataAction((FSAView) this));
 		intersection.setToolTipText("Intersection of Finite Automata");
-		bar.add(intersection);
+		bar2.add(intersection);
 
-		bar.setAlignmentX(0);
+		bar1.setAlignmentX(LEFT_ALIGNMENT);
+		bar2.setAlignmentY(LEFT_ALIGNMENT);
 
+		bar.add(bar1, BorderLayout.NORTH);
+		bar.add(bar2, BorderLayout.SOUTH);
 		return bar;
 	}
 

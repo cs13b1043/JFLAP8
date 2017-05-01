@@ -2,12 +2,16 @@ package view.algorithms.transform;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 
+import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JToolBar;
 
 import file.xml.graph.AutomatonEditorData;
 import model.algorithms.transform.fsa.InvertAutomataConverter;
@@ -56,6 +60,8 @@ public class InvertedAutomatonPanel extends AutomatonDisplayPanel<FiniteStateAcc
 		MagnifiablePanel right = new MagnifiablePanel(new BorderLayout());
 
 		ToolBar tools = createTools();
+		JToolBar viewToolbar = createViewToolbar();
+		right.add(viewToolbar, BorderLayout.NORTH);
 		right.add(tools, BorderLayout.EAST);
 		right.add(dScroll, BorderLayout.CENTER);
 
@@ -74,6 +80,29 @@ public class InvertedAutomatonPanel extends AutomatonDisplayPanel<FiniteStateAcc
 		// moveStartState(tools.getPreferredSize().width);
 
 	}
+	
+	private JToolBar createViewToolbar() {
+		JToolBar tools = new JToolBar();
+		JButton fitScreen = new JButton("Fit to screen");
+		// changeLayout.addActionListener(new NFAtoDFAAction((FSAView)this));
+		fitScreen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				myDFApanel.fitToScreen();
+			}
+		});
+		fitScreen.setToolTipText("Fit to Screen");
+		tools.add(fitScreen);
+
+		JButton changeLayout = new JButton("LayoutGraph");
+		changeLayout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				myDFApanel.layoutGraph();
+			}
+		});
+		changeLayout.setToolTipText("Change the layout of the graph");
+		tools.add(changeLayout);
+		return tools;
+	}
 
 	private void moveStartState(int width) {
 		FiniteStateAcceptor fsa = myDFApanel.getAutomaton();
@@ -87,32 +116,25 @@ public class InvertedAutomatonPanel extends AutomatonDisplayPanel<FiniteStateAcc
 		NonTransitionArrowTool<FiniteStateAcceptor, FSATransition> arrow = new NonTransitionArrowTool<FiniteStateAcceptor, FSATransition>(
 				myDFApanel, myDFApanel.getAutomaton());
 
-		// TransitionExpanderTool trans = new TransitionExpanderTool(myDFApanel,
-		// myAlg);
-		// StateExpanderTool state = new StateExpanderTool(myDFApanel, myAlg);
-
-		// ToolBar tools = new ToolBar(arrow, trans, state);
-		// tools.addToolListener(myDFApanel);
-		// myDFApanel.setTool(arrow);
-
-		// tools.addSeparator();
 		ToolBar tools = new ToolBar();
 
-		tools.add(new TooltipAction("Next", "Next step") {
+		ImageIcon next_icon = new ImageIcon(
+				Toolkit.getDefaultToolkit().getImage(getClass().getResource("/ICON/next.png")));
+		tools.add(new AbstractAction("Next", next_icon) {
 			public void actionPerformed(ActionEvent e) {
 				if (myAlg.canStep()) {
 					myAlg.step();
-					System.out.println("Step finish");
 					// myDFApanel.layoutGraph();
 				}
 			}
 		});
 
-		tools.add(new TooltipAction("Complete", "Final Result") {
+		ImageIcon final_icon = new ImageIcon(
+				Toolkit.getDefaultToolkit().getImage(getClass().getResource("/ICON/tick.png")));
+		tools.add(new AbstractAction("Final Result", final_icon) {
 			public void actionPerformed(ActionEvent e) {
 				while (myAlg.canStep()) {
 					myAlg.step();
-					System.out.println("whole finish");
 					// without the following line, this action will crash JFLAP.
 					// No idea
 					// why, something to do with FontMetrics when drawing
@@ -134,28 +156,6 @@ public class InvertedAutomatonPanel extends AutomatonDisplayPanel<FiniteStateAcc
 				export();
 			}
 		});
-
-		JButton changeLayout = new JButton("LayoutGraph");
-		// changeLayout.addActionListener(new NFAtoDFAAction((FSAView)this));
-		changeLayout.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// AutomatonEditorPanel<T, S> panel = (AutomatonEditorPanel<T,
-				// S>) getCentralPanel();
-				myDFApanel.layoutGraph();
-			}
-		});
-		changeLayout.setToolTipText("Change the layout of the graph");
-		tools.add(changeLayout);
-
-		JButton fitScreen = new JButton("Fit to screen");
-		// changeLayout.addActionListener(new NFAtoDFAAction((FSAView)this));
-		fitScreen.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				myDFApanel.fitToScreen();
-			}
-		});
-		fitScreen.setToolTipText("Fit to Screen");
-		tools.add(fitScreen);
 
 		return tools;
 	}

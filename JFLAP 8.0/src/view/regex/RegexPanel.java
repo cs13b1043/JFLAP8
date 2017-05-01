@@ -1,39 +1,28 @@
 package view.regex;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JTextField;
+import javax.swing.JLabel;
 import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import debug.JFLAPDebug;
-import model.algorithms.conversion.regextofa.RegularExpressionToNFAConversion;
+import errors.BooleanWrapper;
 import model.automata.InputAlphabet;
-import model.automata.acceptors.fsa.FSATransition;
-import model.automata.acceptors.fsa.FiniteStateAcceptor;
-import model.change.events.AdvancedChangeEvent;
-import model.formaldef.components.ChangeTypes;
 import model.regex.RegularExpression;
 import model.regex.RegularExpressionException;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
 import model.undo.IUndoRedo;
 import model.undo.UndoKeeper;
-import universe.JFLAPUniverse;
 import universe.preferences.JFLAPPreferences;
 import util.view.magnify.MagnifiableLabel;
 import util.view.magnify.MagnifiablePanel;
 import util.view.magnify.MagnifiableTextField;
 import view.EditingPanel;
-import view.action.automata.FastSimulateAction;
-import view.algorithms.conversion.regextofa.RegularExpressionToFAPanel;
-import view.automata.editing.AutomatonEditorPanel;
-import view.automata.views.FSAView;
-import errors.BooleanWrapper;
 
 public class RegexPanel extends EditingPanel {
 
@@ -55,23 +44,21 @@ public class RegexPanel extends EditingPanel {
 		MagnifiablePanel regexPanel = new MagnifiablePanel(new BorderLayout());
 		regexPanel.add(new MagnifiableLabel("Expression: ", JFLAPPreferences.getDefaultTextSize()), BorderLayout.NORTH);
 		regexPanel.add(myField, BorderLayout.CENTER);
-		regexPanel
-				.add(new MagnifiableLabel("Edit the regular expression above. " + JFLAPPreferences.getEmptySubLiteral()
-						+ " is the empty string sub.", JFLAPPreferences.getDefaultTextSize()), BorderLayout.SOUTH);
+		JLabel label = new JLabel("Edit the regular expression above. " + JFLAPPreferences.getEmptySubLiteral()
+				+ " is the empty string.");
+		label.setFont(new Font("Sans Serif", Font.PLAIN, 18));
+		regexPanel.add(label, BorderLayout.SOUTH);
 		add(regexPanel, BorderLayout.CENTER);
-		
+
 		JToolBar bar = new JToolBar();
-		/*JButton convertREtoNFA = new JButton("Convert NFA");
-		convertREtoNFA.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO
-			}
-		});
-		convertREtoNFA.setToolTipText("Convert RE to NFA");
-		bar.add(convertREtoNFA);
-		*/
+		/*
+		 * JButton convertREtoNFA = new JButton("Convert NFA");
+		 * convertREtoNFA.addActionListener(new ActionListener() {
+		 * 
+		 * @Override public void actionPerformed(ActionEvent e) { // TODO } });
+		 * convertREtoNFA.setToolTipText("Convert RE to NFA");
+		 * bar.add(convertREtoNFA);
+		 */
 		add(bar, BorderLayout.SOUTH);
 		initListener();
 	}

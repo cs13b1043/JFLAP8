@@ -86,7 +86,7 @@ public class MainMenu extends JFrame {
 		// Mini menu!
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(this.createMenu("File", new OpenAction(), new ExitAction()));
-		menuBar.add(this.createMenu("Help", new MainMenuHelpAction(), new AboutAction(), new PreferenceAction()));
+		menuBar.add(this.createMenu("Help", /*new MainMenuHelpAction(), new AboutAction(),*/ new PreferenceAction()));
 		//menuBar.add(this.createMenu("Batch", new BatchTestAction()));
 		setJMenuBar(menuBar);
 	}
