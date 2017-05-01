@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
@@ -23,6 +24,7 @@ import util.view.magnify.MagnifiableLabel;
 import util.view.magnify.MagnifiablePanel;
 import util.view.magnify.MagnifiableTextField;
 import view.EditingPanel;
+import view.action.regex.REtoFAAction;
 
 public class RegexPanel extends EditingPanel {
 
@@ -42,24 +44,18 @@ public class RegexPanel extends EditingPanel {
 
 	private void initView() {
 		MagnifiablePanel regexPanel = new MagnifiablePanel(new BorderLayout());
-		regexPanel.add(new MagnifiableLabel("Expression: ", JFLAPPreferences.getDefaultTextSize()), BorderLayout.NORTH);
+		regexPanel.add(new MagnifiableLabel("<html><b>Enter Regular Expression: </b><br> '<b>"
+				+ JFLAPPreferences.getEmptySubLiteral() + "</b>' is the <i>empty</i> string. '<b>"
+				+ JFLAPPreferences.getUnionOperator() + "</b>' is the <i>union</i> operator.</html>",
+				JFLAPPreferences.getDefaultTextSize()), BorderLayout.NORTH);
 		regexPanel.add(myField, BorderLayout.CENTER);
-		JLabel label = new JLabel("Edit the regular expression above. " + JFLAPPreferences.getEmptySubLiteral()
-				+ " is the empty string.");
-		label.setFont(new Font("Sans Serif", Font.PLAIN, 18));
-		regexPanel.add(label, BorderLayout.SOUTH);
+		// JLabel label = new JLabel("Edit the regular expression above. " +
+		// JFLAPPreferences.getEmptySubLiteral()
+		// + " is the empty string.");
+		// label.setFont(new Font("Sans Serif", Font.PLAIN, 18));
+		// regexPanel.add(label, BorderLayout.SOUTH);
 		add(regexPanel, BorderLayout.CENTER);
 
-		JToolBar bar = new JToolBar();
-		/*
-		 * JButton convertREtoNFA = new JButton("Convert NFA");
-		 * convertREtoNFA.addActionListener(new ActionListener() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent e) { // TODO } });
-		 * convertREtoNFA.setToolTipText("Convert RE to NFA");
-		 * bar.add(convertREtoNFA);
-		 */
-		add(bar, BorderLayout.SOUTH);
 		initListener();
 	}
 

@@ -105,7 +105,7 @@ public class JFLAPPreferences {
 	private static Color TRANS_COLOR = JFLAPConstants.DEFAULT_TRANS_COLOR;
 	private static Color SELECTED_TRANS_COLOR = JFLAPConstants.RED_HIGHLIGHT;
 	
-	private static int DEFAULT_TEXT_SIZE = 50;
+	private static int DEFAULT_TEXT_SIZE = 28;
 	private static String FONT_NAME = "Dialog";
 	private static int FONT_STYLE = 1;
 

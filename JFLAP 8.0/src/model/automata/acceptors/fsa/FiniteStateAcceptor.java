@@ -13,19 +13,13 @@ import model.formaldef.components.FormalDefinitionComponent;
 
 public class FiniteStateAcceptor extends Acceptor<FSATransition> {
 
-	public FiniteStateAcceptor(StateSet states, 
-									InputAlphabet langAlph,
-									TransitionSet<FSATransition> functions, 
-									StartState start,
-									FinalStateSet finalStates) {
+	public FiniteStateAcceptor(StateSet states, InputAlphabet langAlph, TransitionSet<FSATransition> functions,
+			StartState start, FinalStateSet finalStates) {
 		super(states, langAlph, functions, start, finalStates);
 	}
 
 	public FiniteStateAcceptor() {
-		this(new StateSet(),
-				new InputAlphabet(),
-				new TransitionSet<FSATransition>(),
-				new StartState(),
+		this(new StateSet(), new InputAlphabet(), new TransitionSet<FSATransition>(), new StartState(),
 				new FinalStateSet());
 	}
 
@@ -41,30 +35,24 @@ public class FiniteStateAcceptor extends Acceptor<FSATransition> {
 
 	@Override
 	public FiniteStateAcceptor alphabetAloneCopy() {
-		return new FiniteStateAcceptor(new StateSet(), 
-						this.getInputAlphabet().copy(), 
-						new TransitionSet<FSATransition>(), 
-						new StartState(), 
-						new FinalStateSet());
+		return new FiniteStateAcceptor(new StateSet(), this.getInputAlphabet().copy(),
+				new TransitionSet<FSATransition>(), new StartState(), new FinalStateSet());
 	}
 
 	public static boolean hasAllSingleSymbolInput(FiniteStateAcceptor dfa) {
-		for (FSATransition trans : dfa.getTransitions()){
-			if (trans.getInput().length > 1){
+		for (FSATransition trans : dfa.getTransitions()) {
+			if (trans.getInput().length > 1) {
 				return false;
 			}
 		}
 		return true;
 	}
-	
+
 	@Override
 	public FiniteStateAcceptor copy() {
 		StartState start = getStartState() == null ? new StartState() : new StartState(getStartState().copy());
-		return new FiniteStateAcceptor(this.getStates().copy(),
-				this.getInputAlphabet().copy(),
-				this.getTransitions().copy(),
-				start,
-				this.getFinalStateSet().copy());
+		return new FiniteStateAcceptor(this.getStates().copy(), this.getInputAlphabet().copy(),
+				this.getTransitions().copy(), start, this.getFinalStateSet().copy());
 	}
 
 	@Override
@@ -72,6 +60,26 @@ public class FiniteStateAcceptor extends Acceptor<FSATransition> {
 		return new FSATransition(from, to);
 	}
 
-	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj.getClass().equals(this.getClass()))) {
+			return false;
+		}
+		// return((StateSet) obj).size() == this.size() &&
+		// containsAll((StateSet) obj);
+		if (this.getStates().equals(((FiniteStateAcceptor) obj).getStates())
+				&& this.getInputAlphabet().equals(((FiniteStateAcceptor) obj).getInputAlphabet())
+				&& this.getTransitions().equals(((FiniteStateAcceptor) obj).getTransitions())
+				&& this.getStartState().equals(((FiniteStateAcceptor) obj).getStartState())
+				&& this.getFinalStateSet().equals(((FiniteStateAcceptor) obj).getFinalStateSet())) {
+
+			return true;
+		}
+
+		return false;
+	}
 
 }
