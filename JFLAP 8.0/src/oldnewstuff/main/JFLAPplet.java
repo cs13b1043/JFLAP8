@@ -37,9 +37,7 @@ public class JFLAPplet extends JApplet {
 	 */
 	public void init() {
 		// Show the message.
-		JTextArea text = new JTextArea("Welcome to JFLAP "
-				+ AboutBox.VERSION + "!\n"
-				+ "Report bugs to rodger@cs.duke.edu!");
+		JTextArea text = new JTextArea("Welcome to SWE Project.\n");
 		text.setEditable(false);
 		text.setWrapStyleWord(true);
 		JScrollPane scroller = new JScrollPane(text,

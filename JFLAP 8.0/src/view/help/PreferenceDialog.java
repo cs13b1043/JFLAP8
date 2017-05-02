@@ -47,7 +47,7 @@ public class PreferenceDialog extends JDialog {
 	// Default buttons so user can reset prefs in one click
 	private List<JRadioButton> buttonList;
 
-	private SpinnerNumberModel bufferAmount;
+	//private SpinnerNumberModel bufferAmount;
 
 	/*
 	 * private JSpinner aSpin; private JSpinner dSpin; private JSpinner hSpin;
@@ -171,7 +171,7 @@ public class PreferenceDialog extends JDialog {
 			public void actionPerformed(ActionEvent arg0) {
 				for (JRadioButton b : buttonList)
 					b.doClick();
-				bufferAmount.setValue(JFLAPConstants.DEFAULT_TM_BUFFER);
+				//bufferAmount.setValue(JFLAPConstants.DEFAULT_TM_BUFFER);
 				// aSpin.getModel().setValue(JFLAPConstants.DEFAULT_LS_ANGLE);
 				// dSpin.getModel().setValue(JFLAPConstants.DEFAULT_LS_DISTANCE);
 				// hSpin.getModel().setValue(JFLAPConstants.DEFAULT_LS_HUE);
