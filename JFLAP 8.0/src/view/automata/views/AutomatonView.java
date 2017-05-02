@@ -5,6 +5,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -14,14 +16,21 @@ import javax.swing.JToolBar;
 
 import file.xml.graph.AutomatonEditorData;
 import model.automata.Automaton;
+import model.automata.State;
+import model.automata.StateSet;
 import model.automata.Transition;
+import model.change.events.SetToEvent;
+import model.undo.CompoundUndoRedo;
 import model.undo.UndoKeeper;
+import universe.preferences.JFLAPPreferences;
 import view.action.automata.DFAtoREAction;
 import view.action.automata.FastSimulateAction;
 import view.action.automata.IntersectionAutomataAction;
 import view.action.automata.InvertAutomataAction;
 import view.action.automata.MultipleSimulateAction;
 import view.action.automata.NFAtoDFAAction;
+import view.action.automata.SimulateAction;
+import view.action.automata.TrapStateAction;
 import view.action.automata.UnionAutomataAction;
 import view.automata.editing.AutomatonEditorPanel;
 import view.automata.tools.ArrowTool;
@@ -31,6 +40,7 @@ import view.automata.tools.ToolBar;
 import view.automata.tools.TransitionTool;
 import view.automata.undoing.AutomataRedoAction;
 import view.automata.undoing.AutomataUndoAction;
+import view.automata.undoing.ClearSelectionEvent;
 import view.formaldef.BasicFormalDefinitionView;
 import view.undoing.redo.RedoAction;
 import view.undoing.redo.RedoButton;
@@ -93,10 +103,10 @@ public class AutomatonView<T extends Automaton<S>, S extends Transition<S>> exte
 
 		UndoButton undoB = new UndoButton(undo, true);
 		undoB.setToolTipText("Undo");
-		
+
 		RedoButton redoB = new RedoButton(redo, true);
 		redoB.setToolTipText("Redo");
-		
+
 		bar.add(undoB);
 		bar.add(redoB);
 		return bar;
@@ -106,19 +116,36 @@ public class AutomatonView<T extends Automaton<S>, S extends Transition<S>> exte
 	public JPanel createConvertbar(T definition, UndoKeeper keeper) {
 		AutomatonEditorPanel<T, S> panel = (AutomatonEditorPanel<T, S>) getCentralPanel();
 
-		JPanel bar =new JPanel(new BorderLayout());
-		
+		JPanel bar = new JPanel(new BorderLayout());
+
+		// toolbar 1 - inputs
 		JToolBar bar1 = new JToolBar();
 		JButton fastRun = new JButton("FastRun");
 		fastRun.addActionListener((new FastSimulateAction((FSAView) this)));
 		fastRun.setToolTipText("Run an input on the automaton");
 		bar1.add(fastRun);
-		
+
 		JButton multipleRun = new JButton("MultipleRun");
 		multipleRun.addActionListener((new MultipleSimulateAction((FSAView) this)));
 		multipleRun.setToolTipText("Run multiple inputs on the automaton");
 		bar1.add(multipleRun);
 
+		JButton stepByState = new JButton("StepByState");
+		stepByState.addActionListener((new SimulateAction(this, false)));
+		stepByState.setToolTipText("Step by state");
+		//bar1.add(stepByState);
+
+		JButton stepByClosure = new JButton("StepWithClosure");
+		stepByClosure.addActionListener((new SimulateAction(this, true)));
+		stepByClosure.setToolTipText("Step with closure");
+		//bar1.add(stepByClosure);
+		
+		JButton trap = new JButton("CompleteDFA");
+		trap.addActionListener(new TrapStateAction((FSAView)this));
+		trap.setToolTipText(" This action is used to add a trap state and complete a DFA.(all transitions from all states)");
+		bar1.add(trap);
+
+		// toolbar 2 - convert
 		JToolBar bar2 = new JToolBar();
 		JButton convertToRE = new JButton("ConvertToRE");
 		convertToRE.addActionListener(new DFAtoREAction((FSAView) this));
@@ -129,20 +156,20 @@ public class AutomatonView<T extends Automaton<S>, S extends Transition<S>> exte
 		convertToDFA.addActionListener(new NFAtoDFAAction((FSAView) this));
 		convertToDFA.setToolTipText("Convert the NFA to DFA");
 		bar2.add(convertToDFA);
-		
+
 		JButton invert = new JButton("Complement");
 		invert.addActionListener(new InvertAutomataAction((FSAView) this));
-		invert.setToolTipText("Complement of Finite Automaton");
+		invert.setToolTipText("Complement of Finite Automaton ");
 		bar2.add(invert);
 
 		JButton union = new JButton("Union");
 		union.addActionListener(new UnionAutomataAction((FSAView) this));
-		union.setToolTipText("Union of Finite Automata");
+		union.setToolTipText("Select the automaton present in the appropriate environment with which you want to perform the union. First, we get a NFA which has to be converted to DFA later.");
 		bar2.add(union);
-		
+
 		JButton intersection = new JButton("Intersection");
 		intersection.addActionListener(new IntersectionAutomataAction((FSAView) this));
-		intersection.setToolTipText("Intersection of Finite Automata");
+		intersection.setToolTipText("Select the automaton present in the appropriate environment with which you want to perform the intersection.");
 		bar2.add(intersection);
 
 		bar1.setAlignmentX(LEFT_ALIGNMENT);
@@ -180,6 +207,47 @@ public class AutomatonView<T extends Automaton<S>, S extends Transition<S>> exte
 		});
 		changeLayout.setToolTipText("Change the layout of the graph");
 		bar.add(changeLayout);
+
+		JButton renameStates = new JButton("ResetStates");
+		// changeLayout.addActionListener(new NFAtoDFAAction((FSAView)this));
+		renameStates.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				CompoundUndoRedo comp = new CompoundUndoRedo(new ClearSelectionEvent(panel));
+
+				StateSet states = panel.getAutomaton().getStates();
+				int maxId = states.size() - 1;
+				TreeSet<Integer> untaken = new TreeSet<Integer>();
+				Set<State> reassign = states.copy();
+
+				for (int i = 0; i <= maxId; i++)
+					untaken.add(new Integer(i));
+				for (State s : states)
+					if (untaken.remove(new Integer(s.getID()))) {
+						reassign.remove(s);
+						String basic = JFLAPPreferences.getDefaultStateNameBase() + s.getID();
+
+						if (!s.getName().equals(basic))
+							comp.add(new SetToEvent<State>(s, s.copy(), new State(basic, s.getID())));
+					}
+				// Now untaken has the untaken IDs, and reassign has the
+				// states that need reassigning.
+				for (State s : states) {
+					if (reassign.contains(s)) {
+						int newID = untaken.pollFirst();
+						String basic = JFLAPPreferences.getDefaultStateNameBase() + newID;
+
+						if (!s.getName().equals(basic))
+							comp.add(new SetToEvent<State>(s, s.copy(), new State(basic, newID)));
+					}
+				}
+				if (comp.size() > 1)
+					getKeeper().applyAndListen(comp);
+			}
+		});
+
+		renameStates.setToolTipText("Resets the names of all states");
+		bar.add(renameStates);
 
 		return bar;
 	}

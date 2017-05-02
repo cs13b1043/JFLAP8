@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
 
 import file.xml.graph.AutomatonEditorData;
 import model.algorithms.conversion.regextofa.RegularExpressionToNFAConversion;
@@ -57,18 +58,47 @@ public class RegularExpressionToFAPanel extends AutomatonDisplayPanel<FiniteStat
 		labels.add(mainLabel, BorderLayout.NORTH);
 		labels.add(detailLabel, BorderLayout.SOUTH);
 
-		add(labels, BorderLayout.NORTH);
+		JToolBar viewToolbar = createViewToolbar();
+		
 		
 		ToolBar tools = createToolbar();
 		JScrollPane scroll = new JScrollPane(getEditorPanel());
 		SizeSlider slider = new SizeSlider(getEditorPanel());
 		
 		JPanel panel = new JPanel(new BorderLayout());
+		
+		panel.add(viewToolbar, BorderLayout.NORTH);
 		panel.add(tools, BorderLayout.EAST);
 		panel.add(scroll, BorderLayout.CENTER);
-		panel.add(slider, BorderLayout.SOUTH);
+		panel.add(labels, BorderLayout.SOUTH);
+		//panel.add(slider, BorderLayout.SOUTH);
 		
 		add(panel, BorderLayout.CENTER);
+	}
+	
+	private JToolBar createViewToolbar() {
+
+		AutomatonEditorPanel<FiniteStateAcceptor, FSATransition> panel = getEditorPanel();
+		JToolBar tools = new JToolBar();
+		JButton fitScreen = new JButton("Fit to screen");
+		// changeLayout.addActionListener(new NFAtoDFAAction((FSAView)this));
+		fitScreen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panel.fitToScreen();
+			}
+		});
+		fitScreen.setToolTipText("Fit to Screen");
+		tools.add(fitScreen);
+
+		JButton changeLayout = new JButton("LayoutGraph");
+		changeLayout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panel.layoutGraph();
+			}
+		});
+		changeLayout.setToolTipText("Change the layout of the graph");
+		tools.add(changeLayout);
+		return tools;
 	}
 
 	private ToolBar createToolbar() {
@@ -79,7 +109,7 @@ public class RegularExpressionToFAPanel extends AutomatonDisplayPanel<FiniteStat
 		REtoFATransitionTool trans = new REtoFATransitionTool(panel, myAlg);
 		DeexpressionTransitionTool deex = new DeexpressionTransitionTool(this);
 		
-		ToolBar tools = new ToolBar(arrow, trans, deex);
+		ToolBar tools = new ToolBar(arrow, trans);
 		tools.addToolListener(panel);
 		panel.setTool(arrow);
 		
@@ -115,36 +145,12 @@ public class RegularExpressionToFAPanel extends AutomatonDisplayPanel<FiniteStat
 			}
 		});
 		
-		tools.add(new AbstractAction("Export") {
-			
+		tools.add(new AbstractAction("Export") {	
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				export();
 			}
 		});
-		
-
-		JButton changeLayout = new JButton("LayoutGraph");
-		// changeLayout.addActionListener(new NFAtoDFAAction((FSAView)this));
-		changeLayout.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// AutomatonEditorPanel<T, S> panel = (AutomatonEditorPanel<T,
-				// S>) getCentralPanel();
-				panel.layoutGraph();
-			}
-		});
-		changeLayout.setToolTipText("Change the layout of the graph");
-		tools.add(changeLayout);
-		
-		JButton fitScreen = new JButton("Fit to screen");
-		// changeLayout.addActionListener(new NFAtoDFAAction((FSAView)this));
-		fitScreen.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				panel.fitToScreen();
-			}
-		});
-		fitScreen.setToolTipText("Fit to Screen");
-		tools.add(fitScreen);
 		return tools;
 	}
 

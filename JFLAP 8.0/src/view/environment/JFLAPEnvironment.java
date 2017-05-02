@@ -195,6 +195,27 @@ public class JFLAPEnvironment extends JFrame implements PreferenceChangeListener
 	 * @return A formal definition or pumping lemma to save.
 	 */
 	public Object getSavableObject() {
+
+		Component c_left = mySplitPane.getLeftComponent();
+
+		if (c_left instanceof AutomatonView) {
+			return ((AutomatonView) c_left).createData();
+		} else if (c_left instanceof FormalDefinitionView) {
+			return ((FormalDefinitionView) c_left).getDefinition();
+		}
+
+		Component c_right = mySplitPane.getRightComponent();
+
+		if (c_right instanceof AutomatonView) {
+			return ((AutomatonView) c_right).createData();
+		} else if (c_right instanceof FormalDefinitionView) {
+			return ((FormalDefinitionView) c_right).getDefinition();
+		}
+
+		return null;
+	}
+
+	public Object getSavableObjectOld() {
 		for (int i = 0; i < myTabbedPane.getTabCount(); i++) {
 			Component c = myTabbedPane.getComponent(i);
 

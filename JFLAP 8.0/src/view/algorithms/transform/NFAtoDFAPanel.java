@@ -118,7 +118,8 @@ public class NFAtoDFAPanel extends AutomatonDisplayPanel<FiniteStateAcceptor, FS
 		TransitionExpanderTool trans = new TransitionExpanderTool(myDFApanel, myAlg);
 		StateExpanderTool state = new StateExpanderTool(myDFApanel, myAlg);
 
-		ToolBar tools = new ToolBar(arrow, trans, state);
+		ToolBar tools = new ToolBar(arrow);
+		//ToolBar tools = new ToolBar();
 		tools.addToolListener(myDFApanel);
 		myDFApanel.setTool(arrow);
 

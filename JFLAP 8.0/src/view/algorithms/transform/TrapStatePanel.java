@@ -76,16 +76,19 @@ public class TrapStatePanel extends
 		
 		tools.addToolListener(panel);
 		tools.addSeparator();
-		tools.add(new JButton(new AbstractAction("Do All") {
+		JButton doAll= new JButton("Finish");
+		doAll.addActionListener((new AbstractAction("Do All") {
 			public void actionPerformed(ActionEvent e) {
 				if(!myAlg.hasTrapState())
 					JOptionPane.showMessageDialog(TrapStatePanel.this,
-							"Just create a state.\nI believe in you.",
+							"Just create a state.\n",
 							"Create the State", JOptionPane.ERROR_MESSAGE);
 				else
 					myAlg.stepToCompletion();
 			}
 		}));
+		doAll.setToolTipText("Add a state. Then press this to complete the DFA.");
+		tools.add(doAll);
 		
 		addListeners(mainLabel, detailLabel);
 
