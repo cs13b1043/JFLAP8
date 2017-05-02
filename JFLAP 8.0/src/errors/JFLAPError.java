@@ -69,7 +69,7 @@ public enum JFLAPError {
 
 	DFA_NO_LAMBDA("One can't have lambda in the DFA!", "Improper terminal"),
 
-	NOT_NFA("This is not an NFA!", "Not an NFA"),
+	NOT_NFA("This is not an NFA!", "Not an NFA"),	
 
 	TRANS_FROM_FINAL(
 			"There are transitions from final states.  Please remove them or change "

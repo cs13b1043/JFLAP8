@@ -133,14 +133,14 @@ public class AutomatonView<T extends Automaton<S>, S extends Transition<S>> exte
 		JButton stepByState = new JButton("StepByState");
 		stepByState.addActionListener((new SimulateAction(this, false)));
 		stepByState.setToolTipText("Step by state");
-		bar1.add(stepByState);
+		//bar1.add(stepByState);
 
 		JButton stepByClosure = new JButton("StepWithClosure");
 		stepByClosure.addActionListener((new SimulateAction(this, true)));
 		stepByClosure.setToolTipText("Step with closure");
-		bar1.add(stepByClosure);
+		//bar1.add(stepByClosure);
 		
-		JButton trap = new JButton("Complete DFA");
+		JButton trap = new JButton("CompleteDFA");
 		trap.addActionListener(new TrapStateAction((FSAView)this));
 		trap.setToolTipText(" This action is used to add a trap state and complete a DFA.(all transitions from all states)");
 		bar1.add(trap);
